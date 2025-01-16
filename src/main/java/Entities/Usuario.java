@@ -1,11 +1,14 @@
 package Entities;
 
+import Enum.Rol;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -28,11 +31,13 @@ public class Usuario implements UserDetails {
     @Column(name = "nombre_usuario", unique = true, nullable = false)
     private String nombreUsuario;
 
-    //rol
+    @Column(name = "rol")
+    @Enumerated(EnumType.ORDINAL)
+    private Rol rol;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return Collections.singletonList(new SimpleGrantedAuthority(this.rol.name()));
     }
 
     @Override
