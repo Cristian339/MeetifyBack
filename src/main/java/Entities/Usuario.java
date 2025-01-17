@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Getter
 @Setter
@@ -42,31 +41,35 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return this.contraseña;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return this.nombreUsuario;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return true;
+    }
+
+    public Rol getRol() {
+        return this.rol;
     }
 }
