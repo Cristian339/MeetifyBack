@@ -3,6 +3,8 @@ package Entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -22,11 +24,20 @@ public class Perfil {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "apellidos", nullable = false)
+    private String apellidos;
+
     @Column(name = "correo_electronico", unique = true, nullable = false)
     private String correoElectronico;
 
     @Column(name = "puntaje_total")
     private Integer puntajeTotal;
+
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
 
     @Column(name = "pais")
     private String pais;

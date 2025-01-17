@@ -14,21 +14,27 @@ DROP TABLE IF EXISTS usuario CASCADE;
 CREATE TABLE usuario (
                          usuario_id SERIAL PRIMARY KEY,
                          contraseña VARCHAR(255) NOT NULL,
-                         nombre_usuario VARCHAR(50) UNIQUE NOT NULL
+                         nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+                         rol INT  -- Modificado para ser un número (almacena el valor ordinal del rol)
 );
+
 
 -- Crear tabla perfil
 CREATE TABLE perfil (
                         perfil_id SERIAL PRIMARY KEY,
                         usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
+                        nombre VARCHAR(100) NOT NULL,  -- Añadido según la clase
+                        apellidos VARCHAR(100) NOT NULL,  -- Añadido según la clase
                         correo_electronico VARCHAR(100) UNIQUE NOT NULL,
                         puntaje_total INT DEFAULT 0,
+                        fecha_nacimiento DATE,  -- Añadido según la clase
                         pais VARCHAR(50),
                         genero VARCHAR(20),
                         biografia TEXT,
                         privado BOOLEAN DEFAULT FALSE,
                         baneado BOOLEAN DEFAULT FALSE
 );
+
 
 -- Crear tabla categoria
 CREATE TABLE categoria (
