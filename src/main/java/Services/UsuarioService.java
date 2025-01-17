@@ -1,11 +1,11 @@
 package Services;
 
-
 import Entities.Perfil;
 import Entities.Usuario;
-
+import Enum.Rol;
 import Repositories.UsuarioRepository;
 import Security.JWTService;
+import dto.LoginDTO;
 import dto.RegistroDTO;
 import dto.RespuestaDTO;
 import lombok.AllArgsConstructor;
@@ -20,71 +20,55 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class UsuarioService implements UserDetailsService {
 
-
-    private UsuarioRepository usuarioRepository;
-    private  perfilService;
-    private final PasswordEncoder passwordEncoder;
-    private JWTService jwtService;
+    private final UsuarioRepository usuarioRepository;
+    private final PerfilService perfilService;
+    private final PasswordEncoder codificadorContraseña;
+    private final JWTService jwtService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return usuarioRepository.findTopByUsername(username).orElse(null);
+    public UserDetails loadUserByUsername(String nombreUsuario) throws UsernameNotFoundException {
+        return usuarioRepository.findTopByUsername(nombreUsuario).orElse(null);
     }
 
-
-    public Usuario registrarUsuario(RegistroDTO dto){
-
+    public Usuario registrarUsuario(RegistroDTO dto) {
         Usuario nuevoUsuario = new Usuario();
-        nuevoUsuario.setUsername(dto.getUsername());
-        nuevoUsuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        nuevoUsuario.setNombreUsuario(dto.getNombreUsuario());
+        nuevoUsuario.setContraseña(codificadorContraseña.encode(dto.getContrasenia()));
         nuevoUsuario.setRol(Rol.PERFIL);
-
 
         Perfil perfil = new Perfil();
         perfil.setNombre(dto.getNombre());
         perfil.setApellidos(dto.getApellidos());
-        perfil.setDni(dto.getDni());
-        perfil.setMail(dto.getMail());
-        perfil.setPuesto("Sin Puesto");
-        perfil.setAptitudes(new HashSet<>());
-        perfil.setPublicacion(new HashSet<>());
+        perfil.setCorreoElectronico(dto.getCorreoElectronico());
+        perfil.setPuntajeTotal(0);
+        perfil.setPrivado(false);
+        perfil.setBaneado(false);
 
-
-        //FECHA NACIMIENTO (STRING) -> LOCALTADE
+        // FECHA NACIMIENTO (STRING) -> LOCALDATE
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fechaNacimiento = LocalDate.parse(dto.getFechaNacimiento(), formatter);
         perfil.setFechaNacimiento(fechaNacimiento);
 
         Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
-
-
         perfil.setUsuario(usuarioGuardado);
-        Perfil perfilGuardado = perfilService.guardarPerfil(perfil);
-
+        perfilService.guardarPerfil(perfil);
 
         return usuarioGuardado;
     }
 
-
-    public ResponseEntity<RespuestaDTO> login(LoginDTO dto){
-
-        // Buscar usuario por nombre de usuario
+    public ResponseEntity<RespuestaDTO> iniciarSesion(LoginDTO dto) {
         Optional<Usuario> usuarioOpcional = usuarioRepository.findTopByUsername(dto.getUsername());
 
         if (usuarioOpcional.isPresent()) {
             Usuario usuario = usuarioOpcional.get();
 
-            // Verificar la contraseña
-            if (passwordEncoder.matches(dto.getPassword(), usuario.getPassword())) {
-
-                // Contraseña válida, devolver token de acceso
+            if (codificadorContraseña.matches(dto.getPassword(), usuario.getPassword())) {
                 String token = jwtService.generateToken(usuario);
                 return ResponseEntity
                         .ok(RespuestaDTO
@@ -97,42 +81,5 @@ public class UsuarioService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("Usuario no encontrado");
         }
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        return null;
-//    }
-//
-//    public Usuario buscarUsuarioPorNombre(String username){
-//        return usuarioRepository.findTopByUsername(username).orElse(null);
-//    }
-//
-//
-//
-//    public Usuario guardarUsuario(UsuarioDTO dto){
-//
-//        Usuario usuario = new Usuario();
-//        usuario.setUsername(dto.getUsername());
-//        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
-//        usuario.setRol(Rol.PERFIL);
-//        return usuarioRepository.save(usuario);
-//
-//    }
-
-
 }
