@@ -69,8 +69,9 @@ public class JWTService {
      * @return
      */
     public boolean isExpired(String token){
-        return new Date(extractTokenData(token).getFecha_expiracion()).before(new Date()) ;
+        return new Date(extractTokenData(token).getFechaExpiracion()).before(new Date());
     }
+
 
     private Key getSignInKey(){
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
