@@ -11,11 +11,11 @@ public class RegistroDTO {
     private  String nombre;
     private String apellidos;
     private String fechaNacimiento;
-    private String mail;
+    private String correoElectronico;
     private String dni;
 
     // TABLA USUARIO
-    private String username;
-    private String password;
+    private String nombreUsuario;
+    private String contrasenia;
 
 }
