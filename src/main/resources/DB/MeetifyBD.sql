@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS usuario CASCADE;
 -- Crear tabla usuario
 CREATE TABLE usuario (
                          usuario_id SERIAL PRIMARY KEY,
-                         contraseña VARCHAR(255) NOT NULL,
+                         contrasenia VARCHAR(255) NOT NULL,
                          nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
                          rol INT  -- Modificado para ser un número (almacena el valor ordinal del rol)
 );
