@@ -35,7 +35,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req.requestMatchers("/auth/**").permitAll()
                         //.requestMatchers("/publicacion/**").hasAuthority("PERFIL")
                         //.requestMatchers("/aptitud/**").hasAuthority("ADMIN")
-                        .anyRequest().authenticated())
+/*                        .anyRequest().authenticated())**/
+                        .anyRequest().permitAll())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilterChain, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling((exception) -> exception.accessDeniedHandler(accessDeniedHandler()))
