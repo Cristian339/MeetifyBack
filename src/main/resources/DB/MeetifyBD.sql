@@ -107,6 +107,15 @@ CREATE TABLE denuncia (
                           fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+/*create table token (
+                       id serial primary key,
+                       token text not null,
+                       fecha_creacion timestamp(6) not null,
+                       fecha_expiracion timestamp(6) not null,
+                       id_usuario int not null,
+                       constraint fk_token_usuario foreign key (id_usuario) references usuario(id)
+);*/
+
 -- Crear índices para mejorar rendimiento
 CREATE INDEX idx_usuario_categoria ON usuario_categoria(usuario_id, categoria_id);
 CREATE INDEX idx_publicacion_categoria ON publicacion(categoria_id);
