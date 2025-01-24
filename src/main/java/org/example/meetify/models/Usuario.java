@@ -30,6 +30,9 @@ public class Usuario implements UserDetails {
     @Column(name = "nombre_usuario", unique = true, nullable = false)
     private String nombreUsuario;
 
+    @Column(name = "correo_electronico", unique = true, nullable = false)
+    private String correoElectronico;
+
     @Column(name = "rol")
     @Enumerated(EnumType.ORDINAL)
     private Rol rol;
