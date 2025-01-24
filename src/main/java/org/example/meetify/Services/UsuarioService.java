@@ -1,4 +1,3 @@
-
 package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,8 +27,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UsuarioService implements UserDetailsService {
 
-   private final UsuarioRepository usuarioRepository;
-
+    private final UsuarioRepository usuarioRepository;
     private final PerfilService perfilService;
     private final PasswordEncoder codificadorContrasenia;
     private final JWTService jwtService;
@@ -38,6 +37,7 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.findTopByNombreUsuario(nombreUsuario).orElse(null);
     }
 
+    @Transactional
     public Usuario registrarUsuario(RegistroDTO dto) {
         if (usuarioRepository.findTopByNombreUsuario(dto.getNombreUsuario()).isPresent()) {
             throw new IllegalArgumentException("El nombre de usuario ya está en uso");
@@ -46,6 +46,7 @@ public class UsuarioService implements UserDetailsService {
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setNombreUsuario(dto.getNombreUsuario());
         nuevoUsuario.setContrasenia(codificadorContrasenia.encode(dto.getContrasenia()));
+        nuevoUsuario.setCorreoElectronico(dto.getCorreoElectronico());
         nuevoUsuario.setRol(Rol.PERFIL);
 
         Perfil perfil = new Perfil();
@@ -58,20 +59,27 @@ public class UsuarioService implements UserDetailsService {
         LocalDate fechaNacimiento = LocalDate.parse(dto.getFechaNacimiento(), formatter);
         perfil.setFechaNacimiento(fechaNacimiento);
 
-        Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
-        perfil.setUsuario(usuarioGuardado);
-        perfilService.guardarPerfil(perfil);
-
-        return usuarioGuardado;
+        try {
+            Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
+            perfil.setUsuario(usuarioGuardado);
+            perfilService.guardarPerfil(perfil);
+            return usuarioGuardado;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al crear el usuario o el perfil: " + e.getMessage());
+        }
     }
 
     public ResponseEntity<RespuestaDTO> iniciarSesion(LoginDTO dto) {
-        Optional<Usuario> usuarioOpcional = usuarioRepository.findTopByNombreUsuario(dto.getUsername());
+        Optional<Usuario> usuarioOpcional = usuarioRepository.findTopByNombreUsuario(dto.getUsuario());
+
+        if (!usuarioOpcional.isPresent()) {
+            usuarioOpcional = usuarioRepository.findTopByCorreoElectronico(dto.getUsuario());
+        }
 
         if (usuarioOpcional.isPresent()) {
             Usuario usuario = usuarioOpcional.get();
 
-            if (codificadorContrasenia.matches(dto.getPassword(), usuario.getPassword())) {
+            if (codificadorContrasenia.matches(dto.getContrasenia(), usuario.getPassword())) {
                 String token = jwtService.generateToken(usuario);
                 return ResponseEntity
                         .ok(RespuestaDTO
