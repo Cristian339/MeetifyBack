@@ -43,6 +43,10 @@ public class UsuarioService implements UserDetailsService {
             throw new IllegalArgumentException("El nombre de usuario ya está en uso");
         }
 
+        if (usuarioRepository.findTopByCorreoElectronico(dto.getCorreoElectronico()).isPresent()) {
+            throw new IllegalArgumentException("El correo electrónico ya está en uso");
+        }
+
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setNombreUsuario(dto.getNombreUsuario());
         nuevoUsuario.setContrasenia(codificadorContrasenia.encode(dto.getContrasenia()));
@@ -65,7 +69,7 @@ public class UsuarioService implements UserDetailsService {
             perfilService.guardarPerfil(perfil);
             return usuarioGuardado;
         } catch (Exception e) {
-            throw new RuntimeException("Error al crear el usuario o el perfil: " + e.getMessage());
+            throw new RuntimeException("Error al crear el usuario: " + e.getMessage());
         }
     }
 
