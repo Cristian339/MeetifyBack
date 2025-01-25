@@ -15,26 +15,25 @@ CREATE TABLE usuario (
                          usuario_id SERIAL PRIMARY KEY,
                          contrasenia VARCHAR(255) NOT NULL,
                          nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
-                         rol INT  -- Modificado para ser un número (almacena el valor ordinal del rol)
+                         correo_electronico VARCHAR(100) UNIQUE NOT NULL,
+                         rol INT NOT NULL
 );
-
 
 -- Crear tabla perfil
 CREATE TABLE perfil (
                         perfil_id SERIAL PRIMARY KEY,
                         usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
-                        nombre VARCHAR(100) NOT NULL,  -- Añadido según la clase
-                        apellidos VARCHAR(100) NOT NULL,  -- Añadido según la clase
+                        nombre VARCHAR(100) NOT NULL,
+                        apellidos VARCHAR(100) NOT NULL,
                         correo_electronico VARCHAR(100) UNIQUE NOT NULL,
                         puntaje_total INT DEFAULT 0,
-                        fecha_nacimiento DATE,  -- Añadido según la clase
+                        fecha_nacimiento DATE,
                         pais VARCHAR(50),
                         genero VARCHAR(20),
                         biografia TEXT,
                         privado BOOLEAN DEFAULT FALSE,
                         baneado BOOLEAN DEFAULT FALSE
 );
-
 
 -- Crear tabla categoria
 CREATE TABLE categoria (
@@ -91,10 +90,10 @@ CREATE TABLE mensaje (
 -- Crear tabla notificacion
 CREATE TABLE notificacion (
                               notificacion_id SERIAL PRIMARY KEY,
-                              tipo VARCHAR(50) NOT NULL,       -- Tipo de notificación (nuevo seguidor, comentario, like, etc.)
-                              usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE, -- Usuario que recibirá la notificación
-                              mensaje TEXT NOT NULL,           -- Mensaje de la notificación
-                              visto BOOLEAN DEFAULT FALSE      -- Indica si el usuario ya visualizó la notificación
+                              tipo VARCHAR(50) NOT NULL,
+                              usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
+                              mensaje TEXT NOT NULL,
+                              visto BOOLEAN DEFAULT FALSE
 );
 
 -- Crear tabla denuncia
@@ -106,15 +105,6 @@ CREATE TABLE denuncia (
                           descripcion TEXT NOT NULL,
                           fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-/*create table token (
-                       id serial primary key,
-                       token text not null,
-                       fecha_creacion timestamp(6) not null,
-                       fecha_expiracion timestamp(6) not null,
-                       id_usuario int not null,
-                       constraint fk_token_usuario foreign key (id_usuario) references usuario(id)
-);*/
 
 -- Crear índices para mejorar rendimiento
 CREATE INDEX idx_usuario_categoria ON usuario_categoria(usuario_id, categoria_id);

@@ -74,10 +74,10 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public ResponseEntity<RespuestaDTO> iniciarSesion(LoginDTO dto) {
-        Optional<Usuario> usuarioOpcional = usuarioRepository.findTopByNombreUsuario(dto.getUsuario());
+        Optional<Usuario> usuarioOpcional = usuarioRepository.findTopByNombreUsuario(dto.getNombreUsuario());
 
         if (!usuarioOpcional.isPresent()) {
-            usuarioOpcional = usuarioRepository.findTopByCorreoElectronico(dto.getUsuario());
+            usuarioOpcional = usuarioRepository.findTopByCorreoElectronico(dto.getNombreUsuario());
         }
 
         if (usuarioOpcional.isPresent()) {
