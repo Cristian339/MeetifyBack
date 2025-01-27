@@ -45,6 +45,12 @@ public class PerfilService {
         return perfilDTOS;
     }
 
+
+    public List<Perfil> buscar(String nombre, String apellidos, String correoElectronico) {
+        return perfilRepository.findByNombreAndApellidosAndCorreoElectronico(nombre, apellidos, correoElectronico);
+    }
+
+
     public Perfil getById(Integer id){
         return perfilRepository.findById(id).orElse(null);
     }

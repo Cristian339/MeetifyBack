@@ -16,6 +16,8 @@ public class PublicacionController {
 
     private PublicacionService service;
 
+
+
     @GetMapping("/all")
     public List<PublicacionDTO> general(){
         return service.getAll();
