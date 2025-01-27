@@ -8,6 +8,7 @@ import org.example.meetify.models.Perfil;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,19 @@ public class PerfilService {
 
         return perfilDTOS;
     }
+
+
+    public List<PerfilDTO> general(Perfil perfil){
+        List<PerfilDTO> todas = getAll();
+
+        for (PerfilDTO t : todas){
+            if(t.getCorreoElectronico().equals(perfil.getCorreoElectronico())){
+                todas.remove(t);
+            }
+        }
+    }
+
+
 
     public List<Perfil> buscar(String nombre, String apellidos, String correoElectronico) {
         return perfilRepository.findByNombreAndApellidosAndCorreoElectronico(nombre, apellidos, correoElectronico);
