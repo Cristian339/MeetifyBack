@@ -5,6 +5,7 @@ import lombok.*;
 import org.example.meetify.Enum.Genero;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Getter
@@ -55,4 +56,16 @@ public class Perfil {
 
     @Column(name = "baneado", nullable = true)
     private Boolean baneado;
+
+    @ManyToMany
+    @JoinTable(
+            name = "seguidores",
+            joinColumns = @JoinColumn(name = "seguidor_id", referencedColumnName = "perfil_id"),
+            inverseJoinColumns = @JoinColumn(name = "seguido_id", referencedColumnName = "perfil_id")
+    )
+    private List<Perfil> seguidos;
+
+    // Relación muchos a muchos para los seguidores (inverse)
+    @ManyToMany(mappedBy = "seguidos")
+    private List<Perfil> seguidores;
 }

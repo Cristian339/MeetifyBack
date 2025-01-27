@@ -32,6 +32,17 @@ public class UsuarioService implements UserDetailsService {
     private final PasswordEncoder codificadorContrasenia;
     private final JWTService jwtService;
 
+    public Usuario obtenerUsuarioPorCorreo(String correoElectronico) {
+        Optional<Usuario> usuario = usuarioRepository.findTopByCorreoElectronico(correoElectronico);
+        return usuario.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ese correo"));
+    }
+
+    public Usuario obtenerUsuarioPorNombre(String nombreUsuario) {
+        Optional<Usuario> usuario = usuarioRepository.findTopByNombreUsuario(nombreUsuario);
+        return usuario.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ese nombre de usuario"));
+    }
+
+
     @Override
     public UserDetails loadUserByUsername(String nombreUsuario) throws UsernameNotFoundException {
         return usuarioRepository.findTopByNombreUsuario(nombreUsuario).orElse(null);

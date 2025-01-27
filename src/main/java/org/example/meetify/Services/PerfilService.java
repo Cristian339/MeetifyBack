@@ -8,8 +8,10 @@ import org.example.meetify.models.Perfil;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -73,6 +75,12 @@ public class PerfilService {
         }
 
         return mensaje;
+    }
+
+
+    public Perfil obtenerPerfilPorCorreo(String correoElectronico) {
+        Optional<Perfil> perfil = perfilRepository.findByCorreoElectronico(correoElectronico);
+        return perfil.orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
     }
 
     public void eliminar(Perfil perfil){

@@ -33,28 +33,24 @@ public class JWTFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-
-        //Si viene por una url "/auth" lo dejamos pasar
-        if (request.getServletPath().contains("/auth")){
+        // Si viene por una URL "/auth", lo dejamos pasar
+        if (request.getServletPath().contains("/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if(authHeader== null || !authHeader.startsWith("Bearer")){
-            filterChain.doFilter(request,response);
+        if (authHeader == null || !authHeader.startsWith("Bearer")) {
+            filterChain.doFilter(request, response);
             return;
         }
 
         String token = authHeader.substring(7);
         TokenDataDTO tokenDataDTO = jwtService.extractTokenData(token);
 
-        if(tokenDataDTO!=null && SecurityContextHolder.getContext().getAuthentication() == null){
-
-
+        if (tokenDataDTO != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             Usuario usuario = (Usuario) usuarioService.loadUserByUsername(tokenDataDTO.getUsername());
 
-
-            if(usuario!= null && !jwtService.isExpired(token)){
+            if (usuario != null && !jwtService.isExpired(token)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         usuario.getUsername(),
                         usuario.getPassword(),
@@ -62,10 +58,17 @@ public class JWTFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-
         }
 
         filterChain.doFilter(request, response);
     }
 
+    // Método para obtener el correo del usuario autenticado
+    public String obtenerCorreoAutenticado() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            return authentication.getName();  // El nombre del usuario (su correo electrónico)
+        }
+        return null;  // Si no está autenticado, retornamos null
+    }
 }

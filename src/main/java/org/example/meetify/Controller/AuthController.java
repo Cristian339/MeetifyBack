@@ -1,4 +1,3 @@
-
 package org.example.meetify.Controller;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +29,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<RespuestaDTO> registro(@RequestBody LoginDTO dto){
         return service.iniciarSesion(dto);
+
     }
 
 
