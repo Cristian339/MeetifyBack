@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS usuario_categoria CASCADE;
 DROP TABLE IF EXISTS categoria CASCADE;
 DROP TABLE IF EXISTS perfil CASCADE;
 DROP TABLE IF EXISTS usuario CASCADE;
+DROP TABLE IF EXISTS seguidores CASCADE;
 
 -- Crear tabla usuario
 CREATE TABLE usuario (
@@ -105,6 +106,14 @@ CREATE TABLE denuncia (
                           descripcion TEXT NOT NULL,
                           fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE seguidores (
+                                    seguidor_id INT NOT NULL REFERENCES perfil(perfil_id) ON DELETE CASCADE,
+                                    seguido_id INT NOT NULL REFERENCES perfil(perfil_id) ON DELETE CASCADE,
+                                    PRIMARY KEY (seguidor_id, seguido_id),
+                                    fecha_seguimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 -- Crear índices para mejorar rendimiento
 CREATE INDEX idx_usuario_categoria ON usuario_categoria(usuario_id, categoria_id);

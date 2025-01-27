@@ -21,6 +21,9 @@ public class PublicacionController {
         return service.getAll();
     }
 
-
+    @GetMapping("/segui")
+    public List<PublicacionDTO> seguidos(){
+        return service.getSeguidos();
+    }
 
 }
