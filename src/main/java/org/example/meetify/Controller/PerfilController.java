@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/publicacion/perfil")
+@RequestMapping("/perfil")
 @AllArgsConstructor
 public class PerfilController {
     private PerfilService perfilService;
