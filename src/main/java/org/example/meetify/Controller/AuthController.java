@@ -30,7 +30,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<RespuestaDTO> registro(@RequestBody LoginDTO dto){
         return service.iniciarSesion(dto);
-
     }
 
 
