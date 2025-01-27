@@ -45,18 +45,6 @@ public class PerfilService {
     }
 
 
-    public List<PerfilDTO> general(Perfil perfil){
-        List<PerfilDTO> todas = getAll();
-
-        for (PerfilDTO t : todas){
-            if(t.getCorreoElectronico().equals(perfil.getCorreoElectronico())){
-                todas.remove(t);
-            }
-        }
-    }
-
-
-
     public List<Perfil> buscar(String nombre, String apellidos, String correoElectronico) {
         return perfilRepository.findByNombreAndApellidosAndCorreoElectronico(nombre, apellidos, correoElectronico);
     }
