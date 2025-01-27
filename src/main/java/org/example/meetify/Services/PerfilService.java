@@ -81,4 +81,9 @@ public class PerfilService {
     public void eliminar(Perfil perfil){
         perfilRepository.delete(perfil);
     }
+
+    public PerfilDTO getPerfilDTOPorId(Integer id){
+        Perfil perfil = getById(id);
+        return perfilMapper.toDTO(perfil);
+    }
 }
