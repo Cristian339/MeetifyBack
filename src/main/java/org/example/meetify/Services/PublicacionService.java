@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.Repositories.PublicacionRepository;
-import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
 import org.example.meetify.models.Usuario;
