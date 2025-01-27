@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -44,12 +45,6 @@ public class PerfilService {
         return perfilDTOS;
     }
 
-
-    public List<Perfil> buscar(String nombre, String apellidos, String correoElectronico) {
-        return perfilRepository.findByNombreAndApellidosAndCorreoElectronico(nombre, apellidos, correoElectronico);
-    }
-
-
     public Perfil getById(Integer id){
         return perfilRepository.findById(id).orElse(null);
     }
@@ -75,6 +70,12 @@ public class PerfilService {
         }
 
         return mensaje;
+    }
+
+
+    public Perfil obtenerPerfilPorCorreo(String correoElectronico) {
+        Optional<Perfil> perfil = perfilRepository.findByCorreoElectronico(correoElectronico);
+        return perfil.orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
     }
 
     public void eliminar(Perfil perfil){
