@@ -2,8 +2,8 @@ package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
-import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.Repositories.PublicacionRepository;
+import org.example.meetify.models.Categoria;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
 import org.example.meetify.models.Usuario;
@@ -26,18 +26,27 @@ public class PublicacionService {
 
     private UsuarioService usuarioService;
 
+    private PerfilCategoriaService perfilCategoriaService;
+
     public List<PublicacionDTO> getAll() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         List<Publicacion> publicaciones = repository.findAll();
         List<PublicacionDTO> publicacionDTOS = new ArrayList<>();
 
+
+        Usuario us = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        Perfil perfil = perfilService.obtenerPerfilPorCorreo(us.getCorreoElectronico());
+        List<Categoria> categorias = perfilCategoriaService.obtenerCategoriasPorPerfil(perfil);
+
         for (Publicacion p : publicaciones) {
             // Filtra las publicaciones para excluir las del usuario autenticado
-            if (!p.getUsuarioCreador().getCorreoElectronico().equals(correoAutenticado)) {
-                PublicacionDTO dto = new PublicacionDTO(p.getUsuarioCreador().getNombreUsuario(),
-                        p.getCategoria().getNombre(),p.getImagenUrl(),p.getTitulo(),p.getDescripcion(),
-                        p.getUbicacion());
-                publicacionDTOS.add(dto);
+            if (!p.getUsuarioCreador().getCorreoElectronico().equals(perfil.getCorreoElectronico())) {
+                if(categorias.contains(p.getCategoria())){
+                    PublicacionDTO dto = new PublicacionDTO(p.getUsuarioCreador().getNombreUsuario(),
+                            p.getCategoria().getNombre(),p.getImagenUrl(),p.getTitulo(),p.getDescripcion(),
+                            p.getUbicacion());
+                    publicacionDTOS.add(dto);
+                }
             }
         }
 
@@ -47,13 +56,27 @@ public class PublicacionService {
 
     public List<PublicacionDTO> getSeguidos(){
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        System.out.println(correoAutenticado);
         Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
-        List<PublicacionDTO> todas = getAll();
+
+        List<Publicacion> publis = repository.findAll();
+        List<PublicacionDTO> todas = new ArrayList<>();
+        for(Publicacion d : publis){
+            todas.add(new PublicacionDTO(d.getUsuarioCreador().getNombreUsuario(),
+                    d.getCategoria().getNombre(),d.getImagenUrl(),d.getTitulo(),d.getDescripcion(),
+                    d.getUbicacion()));
+        }
+
+
+
         List<PublicacionDTO> publicaciones = new ArrayList<>();
-        List<Perfil> seguidos = perfil.getSeguidos();
+
+
+
 
         for (PublicacionDTO p : todas){
+            System.out.println(p.getNombrePerfil());
             Usuario us = usuarioService.obtenerUsuarioPorNombre(p.getNombrePerfil());
             Perfil perfilPubli = perfilService.obtenerPerfilPorCorreo(us.getCorreoElectronico());
 
