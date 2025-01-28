@@ -47,15 +47,7 @@ public class PerfilService {
     }
 
 
-    public List<PerfilDTO> general(Perfil perfil){
-        List<PerfilDTO> todas = getAll();
 
-        for (PerfilDTO t : todas){
-            if(t.getCorreoElectronico().equals(perfil.getCorreoElectronico())){
-                todas.remove(t);
-            }
-        }
-    }
 
 
 
