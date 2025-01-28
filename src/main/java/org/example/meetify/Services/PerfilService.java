@@ -5,6 +5,7 @@ import org.example.meetify.DTO.PerfilDTO;
 import org.example.meetify.Mappers.PerfilMapper;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.models.Perfil;
+import org.example.meetify.models.Usuario;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -90,5 +91,10 @@ public class PerfilService {
     public PerfilDTO getPerfilDTOPorId(Integer id){
         Perfil perfil = getById(id);
         return perfilMapper.toDTO(perfil);
+    }
+
+
+    public Perfil buscarPorUsuario(Usuario usuario){
+        return perfilRepository.findTopByUsuario(usuario);
     }
 }

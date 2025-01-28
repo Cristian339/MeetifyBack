@@ -7,6 +7,7 @@ import org.example.meetify.DTO.RegistroDTO;
 import org.example.meetify.DTO.RespuestaDTO;
 import org.example.meetify.Services.UsuarioService;
 import org.example.meetify.models.Usuario;
+import org.example.meetify.seguridad.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,16 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
 
-    private UsuarioService service;
+    private UsuarioService RegisterService;
+    private AuthService LogService;
 
     @PostMapping("/registro")
     public Usuario registro(@RequestBody RegistroDTO registroDTO){
-        return service.registrarUsuario(registroDTO);
+        return RegisterService.registrarUsuario(registroDTO);
     }
 
     @PostMapping("/login")
     public ResponseEntity<RespuestaDTO> registro(@RequestBody LoginDTO dto){
-        return service.iniciarSesion(dto);
+        return LogService.iniciarSesion(dto);
     }
 
 
