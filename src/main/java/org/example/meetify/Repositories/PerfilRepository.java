@@ -1,6 +1,7 @@
 package org.example.meetify.Repositories;
 
 import org.example.meetify.models.Perfil;
+import org.example.meetify.models.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,5 +11,6 @@ public interface PerfilRepository extends JpaRepository<Perfil, Integer> {
 
     Optional<Perfil> findByCorreoElectronico(String correoElectronico);
     List<Perfil> findByNombreAndApellidosAndCorreoElectronico(String nombre, String apellidos, String correoElectronico);
+    Perfil findTopByUsuario(Usuario usuario);
 }
 

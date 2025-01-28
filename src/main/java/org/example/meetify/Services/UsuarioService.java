@@ -23,6 +23,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import static org.example.meetify.seguridad.AuthService.getRespuestaDTOResponseEntity;
+
 @Service
 @AllArgsConstructor
 public class UsuarioService implements UserDetailsService {
@@ -30,7 +32,6 @@ public class UsuarioService implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
     private final PerfilService perfilService;
     private final PasswordEncoder codificadorContrasenia;
-    private final JWTService jwtService;
 
     public Usuario obtenerUsuarioPorCorreo(String correoElectronico) {
         Optional<Usuario> usuario = usuarioRepository.findTopByCorreoElectronico(correoElectronico);
@@ -81,31 +82,6 @@ public class UsuarioService implements UserDetailsService {
             return usuarioGuardado;
         } catch (Exception e) {
             throw new RuntimeException("Error al crear el usuario: " + e.getMessage());
-        }
-    }
-
-    public ResponseEntity<RespuestaDTO> iniciarSesion(LoginDTO dto) {
-        Optional<Usuario> usuarioOpcional = usuarioRepository.findTopByNombreUsuario(dto.getNombreUsuario());
-
-        if (!usuarioOpcional.isPresent()) {
-            usuarioOpcional = usuarioRepository.findTopByCorreoElectronico(dto.getNombreUsuario());
-        }
-
-        if (usuarioOpcional.isPresent()) {
-            Usuario usuario = usuarioOpcional.get();
-
-            if (codificadorContrasenia.matches(dto.getContrasenia(), usuario.getPassword())) {
-                String token = jwtService.generateToken(usuario);
-                return ResponseEntity
-                        .ok(RespuestaDTO
-                                .builder()
-                                .estado(HttpStatus.OK.value())
-                                .token(token).build());
-            } else {
-                throw new BadCredentialsException("Contraseña incorrecta");
-            }
-        } else {
-            throw new UsernameNotFoundException("Usuario no encontrado");
         }
     }
 }

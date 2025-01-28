@@ -29,7 +29,7 @@ CREATE TABLE perfil (
                         puntaje_total INT DEFAULT 0,
                         fecha_nacimiento DATE,
                         pais VARCHAR(50),
-                        genero VARCHAR(20),
+                        genero INT,
                         biografia TEXT,
                         privado BOOLEAN DEFAULT FALSE,
                         baneado BOOLEAN DEFAULT FALSE

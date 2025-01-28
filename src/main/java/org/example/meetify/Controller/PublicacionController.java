@@ -28,4 +28,6 @@ public class PublicacionController {
         return service.getSeguidos();
     }
 
+
+
 }
