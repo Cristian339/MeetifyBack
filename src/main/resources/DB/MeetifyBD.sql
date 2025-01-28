@@ -12,11 +12,11 @@ DROP TABLE IF EXISTS meetify.usuario CASCADE;
 DROP TABLE IF EXISTS meetify.seguidores CASCADE;
 -- Crear tabla usuario
 CREATE TABLE usuario (
-                         usuario_id SERIAL PRIMARY KEY,
-                         contrasenia VARCHAR(255) NOT NULL,
-                         nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
-                         correo_electronico VARCHAR(100) UNIQUE NOT NULL,
-                         rol INT NOT NULL
+                                 usuario_id SERIAL PRIMARY KEY,
+                                 contrasenia VARCHAR(255) NOT NULL,
+                                 nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+                                 correo_electronico VARCHAR(100) UNIQUE NOT NULL,
+                                 rol INT NOT NULL
 );
 
 -- Crear tabla perfil
@@ -37,73 +37,73 @@ CREATE TABLE perfil (
 
 -- Crear tabla categoria
 CREATE TABLE categoria (
-                           categoria_id SERIAL PRIMARY KEY,
-                           nombre VARCHAR(50) UNIQUE NOT NULL
+                                   categoria_id SERIAL PRIMARY KEY,
+                                   nombre VARCHAR(50) UNIQUE NOT NULL
 );
 
--- Crear tabla usuario_categoria
-CREATE TABLE usuario_categoria (
-                                   usuario_categoria_id SERIAL PRIMARY KEY,
-                                   usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
-                                   categoria_id INT NOT NULL REFERENCES categoria(categoria_id) ON DELETE CASCADE
+-- Crear tabla perfil_categoria
+CREATE TABLE perfil_categoria (
+                                          perfil_categoria_id SERIAL PRIMARY KEY,
+                                          perfil_id INT NOT NULL REFERENCES perfil(perfil_id) ON DELETE CASCADE,
+                                          categoria_id INT NOT NULL REFERENCES categoria(categoria_id) ON DELETE CASCADE
 );
 
 -- Crear tabla publicacion
 CREATE TABLE publicacion (
-                             publicacion_id SERIAL PRIMARY KEY,
-                             categoria_id INT NOT NULL REFERENCES categoria(categoria_id) ON DELETE SET NULL,
-                             titulo VARCHAR(100) NOT NULL,
-                             descripcion TEXT NOT NULL,
-                             ubicacion VARCHAR(255),
-                             fecha_ini TIMESTAMP NOT NULL,
-                             fecha_fin TIMESTAMP NOT NULL,
-                             imagen_url TEXT,
-                             usuario_creador_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE
+                                     publicacion_id SERIAL PRIMARY KEY,
+                                     categoria_id INT NOT NULL REFERENCES categoria(categoria_id) ON DELETE SET NULL,
+                                     titulo VARCHAR(100) NOT NULL,
+                                     descripcion TEXT NOT NULL,
+                                     ubicacion VARCHAR(255),
+                                     fecha_ini TIMESTAMP NOT NULL,
+                                     fecha_fin TIMESTAMP NOT NULL,
+                                     imagen_url TEXT,
+                                     usuario_creador_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE
 );
 
--- Crear tabla publicacion_usuario
-CREATE TABLE publicacion_usuario (
-                                     publicacion_usuario_id SERIAL PRIMARY KEY,
-                                     publicacion_id INT NOT NULL REFERENCES publicacion(publicacion_id) ON DELETE CASCADE,
-                                     usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE
+-- Crear tabla publicacion_perfil
+CREATE TABLE publicacion_perfil (
+                                            publicacion_perfil_id SERIAL PRIMARY KEY,
+                                            publicacion_id INT NOT NULL REFERENCES publicacion(publicacion_id) ON DELETE CASCADE,
+                                            perfil_id INT NOT NULL REFERENCES perfil(perfil_id) ON DELETE CASCADE
 );
 
 -- Crear tabla calificacion
 CREATE TABLE calificacion (
-                              calificacion_id SERIAL PRIMARY KEY,
-                              usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
-                              publicacion_id INT NOT NULL REFERENCES publicacion(publicacion_id) ON DELETE CASCADE,
-                              puntuacion INT NOT NULL CHECK (puntuacion BETWEEN 1 AND 5),
-                              comentario TEXT
+                                      calificacion_id SERIAL PRIMARY KEY,
+                                      usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
+                                      publicacion_id INT NOT NULL REFERENCES publicacion(publicacion_id) ON DELETE CASCADE,
+                                      puntuacion INT NOT NULL CHECK (puntuacion BETWEEN 1 AND 5),
+                                      comentario TEXT
 );
 
 -- Crear tabla mensaje
 CREATE TABLE mensaje (
-                         mensaje_id SERIAL PRIMARY KEY,
-                         contenido TEXT NOT NULL,
-                         usuario_emisor_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
-                         usuario_receptor_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
-                         publicacion_id INT REFERENCES publicacion(publicacion_id) ON DELETE SET NULL,
-                         enviado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                 mensaje_id SERIAL PRIMARY KEY,
+                                 contenido TEXT NOT NULL,
+                                 usuario_emisor_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
+                                 usuario_receptor_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
+                                 publicacion_id INT REFERENCES publicacion(publicacion_id) ON DELETE SET NULL,
+                                 enviado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Crear tabla notificacion
 CREATE TABLE notificacion (
-                              notificacion_id SERIAL PRIMARY KEY,
-                              tipo VARCHAR(50) NOT NULL,
-                              usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
-                              mensaje TEXT NOT NULL,
-                              visto BOOLEAN DEFAULT FALSE
+                                      notificacion_id SERIAL PRIMARY KEY,
+                                      tipo VARCHAR(50) NOT NULL,
+                                      usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
+                                      mensaje TEXT NOT NULL,
+                                      visto BOOLEAN DEFAULT FALSE
 );
 
 -- Crear tabla denuncia
 CREATE TABLE denuncia (
-                          denuncia_id SERIAL PRIMARY KEY,
-                          usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
-                          publicacion_id INT REFERENCES publicacion(publicacion_id) ON DELETE SET NULL,
-                          usuario_reportado_id INT REFERENCES usuario(usuario_id) ON DELETE CASCADE,
-                          descripcion TEXT NOT NULL,
-                          fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                  denuncia_id SERIAL PRIMARY KEY,
+                                  usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
+                                  publicacion_id INT REFERENCES publicacion(publicacion_id) ON DELETE SET NULL,
+                                  usuario_reportado_id INT REFERENCES usuario(usuario_id) ON DELETE CASCADE,
+                                  descripcion TEXT NOT NULL,
+                                  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -115,8 +115,7 @@ CREATE TABLE seguidores (
                                     fecha_seguimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
 -- Crear índices para mejorar rendimiento
-CREATE INDEX idx_usuario_categoria ON usuario_categoria(usuario_id, categoria_id);
-CREATE INDEX idx_publicacion_categoria ON publicacion(categoria_id);
-CREATE INDEX idx_calificacion_publicacion ON calificacion(publicacion_id);
+CREATE INDEX idx_perfil_categoria ON meetify.perfil_categoria(perfil_id, categoria_id);
+CREATE INDEX idx_publicacion_categoria ON meetify.publicacion(categoria_id);
+CREATE INDEX idx_calificacion_publicacion ON meetify.calificacion(publicacion_id);
