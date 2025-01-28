@@ -1,6 +1,6 @@
 package org.example.meetify.Enum;
 
 public enum Genero {
-    HOMBRE,
-    MUJER
+    Hombre,
+    Mujer
 }
