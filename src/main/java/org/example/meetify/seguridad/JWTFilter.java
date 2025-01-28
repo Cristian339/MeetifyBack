@@ -64,7 +64,7 @@ public class JWTFilter extends OncePerRequestFilter {
     public String obtenerCorreoAutenticado() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            return authentication.getName();  // El nombre del usuario (su correo electrónico)
+            return authentication.getName(); // El nombre del usuario (su correo electrónico)
         }
         return null;  // Si no está autenticado, retornamos null
     }

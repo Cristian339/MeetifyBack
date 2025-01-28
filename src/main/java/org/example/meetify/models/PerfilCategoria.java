@@ -11,16 +11,16 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(name = "usuario_categoria", schema="meetify")
-public class UsuarioCategoria {
+@Table(name = "perfil_categoria", schema="meetify")
+public class PerfilCategoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "usuario_categoria_id")
+    @Column(name = "perfil_categoria_id")
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "perfil_id", nullable = false)
+    private Perfil perfil;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
