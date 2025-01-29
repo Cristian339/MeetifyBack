@@ -3,10 +3,7 @@ package org.example.meetify.Controller;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.Services.PublicacionService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +14,7 @@ import java.util.List;
 public class PublicacionController {
 
     private PublicacionService service;
+/*
 
 
     @GetMapping("/all")
@@ -29,5 +27,13 @@ public class PublicacionController {
     public List<PublicacionDTO> seguidos(){
         return service.getSeguidos();
     }
+*/
+
+    @PostMapping("/crear")
+    public PublicacionDTO guardar(@RequestBody PublicacionDTO publicacionDTO){
+        return service.aniadirPublicacion(publicacionDTO);
+    }
+
+
 
 }

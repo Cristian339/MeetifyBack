@@ -30,6 +30,9 @@ public class PublicacionService {
 
     private PerfilCategoriaService perfilCategoriaService;
 
+    private final CategoriaRepository categoriaRepository;
+/*
+
     public List<PublicacionDTO> getAll() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         List<Publicacion> publicaciones = repository.findAll();
@@ -87,6 +90,29 @@ public class PublicacionService {
             }
         }
         return publicaciones;
+    }
+*/
+
+    public PublicacionDTO aniadirPublicacion(PublicacionDTO publicacionDTO){
+        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        Publicacion publicacion = new Publicacion();
+        Categoria categoria = categoriaRepository.findByNombre(publicacionDTO.getCategoria());
+
+        if(categoria == null){
+            throw new IllegalArgumentException("Categoria no encontrada" + publicacionDTO.getCategoria());
+        }
+        publicacion.setCategoria(categoria);
+        publicacion.setTitulo(publicacionDTO.getTitulo());
+        publicacion.setDescripcion(publicacionDTO.getDescripcion());
+        publicacion.setUbicacion(publicacionDTO.getUbicacion());
+        publicacion.setImagenUrl(publicacionDTO.getImageUrl());
+        publicacion.setUsuarioCreador(usuario);
+        publicacion.setFechaIni(publicacionDTO.getFechaIni());
+        publicacion.setFechaFin(publicacionDTO.getFechaFin());
+        repository.save(publicacion);
+        return publicacionDTO;
+
     }
 
 }

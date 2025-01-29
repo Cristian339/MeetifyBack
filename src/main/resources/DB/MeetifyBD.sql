@@ -26,6 +26,7 @@ CREATE TABLE perfil (
                         nombre VARCHAR(100) NOT NULL,
                         apellidos VARCHAR(100) NOT NULL,
                         correo_electronico VARCHAR(100) UNIQUE NOT NULL,
+                        imagen_url VARCHAR(255),
                         puntaje_total INT DEFAULT 0,
                         fecha_nacimiento DATE,
                         pais VARCHAR(50),
