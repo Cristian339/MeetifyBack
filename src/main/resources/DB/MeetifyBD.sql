@@ -1,15 +1,15 @@
 -- Dropear tablas existentes (en orden para evitar conflictos por claves foráneas)
-DROP TABLE IF EXISTS meetify.denuncia CASCADE;
-DROP TABLE IF EXISTS meetify.notificacion CASCADE;
-DROP TABLE IF EXISTS meetify.mensaje CASCADE;
-DROP TABLE IF EXISTS meetify.calificacion CASCADE;
-DROP TABLE IF EXISTS meetify.publicacion_perfil CASCADE;
-DROP TABLE IF EXISTS meetify.publicacion CASCADE;
-DROP TABLE IF EXISTS meetify.perfil_categoria CASCADE;
-DROP TABLE IF EXISTS meetify.categoria CASCADE;
-DROP TABLE IF EXISTS meetify.perfil CASCADE;
-DROP TABLE IF EXISTS meetify.usuario CASCADE;
-DROP TABLE IF EXISTS meetify.seguidores CASCADE;
+DROP TABLE IF EXISTS denuncia CASCADE;
+DROP TABLE IF EXISTS notificacion CASCADE;
+DROP TABLE IF EXISTS mensaje CASCADE;
+DROP TABLE IF EXISTS calificacion CASCADE;
+DROP TABLE IF EXISTS publicacion_perfil CASCADE;
+DROP TABLE IF EXISTS publicacion CASCADE;
+DROP TABLE IF EXISTS perfil_categoria CASCADE;
+DROP TABLE IF EXISTS categoria CASCADE;
+DROP TABLE IF EXISTS perfil CASCADE;
+DROP TABLE IF EXISTS usuario CASCADE;
+DROP TABLE IF EXISTS seguidores CASCADE;
 -- Crear tabla usuario
 CREATE TABLE usuario (
                                  usuario_id SERIAL PRIMARY KEY,
