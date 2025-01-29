@@ -2,6 +2,7 @@ package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
+import org.example.meetify.Repositories.CategoriaRepository;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.Repositories.PublicacionRepository;
 import org.example.meetify.Repositories.UsuarioRepository;
