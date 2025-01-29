@@ -2,9 +2,11 @@ package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
+import org.example.meetify.Repositories.CategoriaRepository;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.Repositories.PublicacionRepository;
 import org.example.meetify.Repositories.UsuarioRepository;
+import org.example.meetify.models.Categoria;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
 import org.example.meetify.models.Usuario;
@@ -26,6 +28,9 @@ public class PublicacionService {
     private PerfilService perfilService;
 
     private UsuarioService usuarioService;
+
+    private final CategoriaRepository categoriaRepository;
+/*
 
     public List<PublicacionDTO> getAll() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
@@ -63,6 +68,29 @@ public class PublicacionService {
             }
         }
         return publicaciones;
+    }
+*/
+
+    public PublicacionDTO aniadirPublicacion(PublicacionDTO publicacionDTO){
+        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        Publicacion publicacion = new Publicacion();
+        Categoria categoria = categoriaRepository.findByNombre(publicacionDTO.getCategoria());
+
+        if(categoria == null){
+            throw new IllegalArgumentException("Categoria no encontrada" + publicacionDTO.getCategoria());
+        }
+        publicacion.setCategoria(categoria);
+        publicacion.setTitulo(publicacionDTO.getTitulo());
+        publicacion.setDescripcion(publicacionDTO.getDescripcion());
+        publicacion.setUbicacion(publicacionDTO.getUbicacion());
+        publicacion.setImagenUrl(publicacionDTO.getImageUrl());
+        publicacion.setUsuarioCreador(usuario);
+        publicacion.setFechaIni(publicacionDTO.getFechaIni());
+        publicacion.setFechaFin(publicacionDTO.getFechaFin());
+        repository.save(publicacion);
+        return publicacionDTO;
+
     }
 
 }
