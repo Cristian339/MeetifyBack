@@ -46,7 +46,7 @@ public class PublicacionService {
                 if(categorias.contains(p.getCategoria())){
                     PublicacionDTO dto = new PublicacionDTO(p.getUsuarioCreador().getNombreUsuario(),
                             p.getCategoria().getNombre(),p.getImagenUrl(),p.getTitulo(),p.getDescripcion(),
-                            p.getUbicacion());
+                            p.getUbicacion(),p.getFechaIni(),p.getFechaFin());
                     publicacionDTOS.add(dto);
                 }
             }
@@ -67,7 +67,7 @@ public class PublicacionService {
         for(Publicacion d : publis){
             todas.add(new PublicacionDTO(d.getUsuarioCreador().getNombreUsuario(),
                     d.getCategoria().getNombre(),d.getImagenUrl(),d.getTitulo(),d.getDescripcion(),
-                    d.getUbicacion()));
+                    d.getUbicacion(),d.getFechaIni(),d.getFechaFin()));
         }
 
 

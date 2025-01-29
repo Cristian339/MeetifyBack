@@ -11,7 +11,7 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "publicacion_perfil", schema="meetify")
-public class PublicacionUsuario {
+public class PublicacionPerfil {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "publicacion_perfil_id")

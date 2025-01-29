@@ -3,6 +3,7 @@ package org.example.meetify.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -33,10 +34,10 @@ public class Publicacion {
     private String ubicacion;
 
     @Column(name = "fecha_ini", nullable = false)
-    private LocalDateTime fechaIni;
+    private LocalDate fechaIni;
 
     @Column(name = "fecha_fin", nullable = false)
-    private LocalDateTime fechaFin;
+    private LocalDate fechaFin;
 
     @Column(name = "imagen_url")
     private String imagenUrl;
