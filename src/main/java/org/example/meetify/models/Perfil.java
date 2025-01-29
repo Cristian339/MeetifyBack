@@ -5,6 +5,7 @@ import lombok.*;
 import org.example.meetify.Enum.Genero;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -60,15 +61,15 @@ public class Perfil {
     @Column(name = "imagen_url", nullable = true)
     private String imagenUrl;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, targetEntity = Perfil.class)
     @JoinTable(
-            name = "seguidores",
-            joinColumns = @JoinColumn(name = "seguidor_id", referencedColumnName = "perfil_id"),
-            inverseJoinColumns = @JoinColumn(name = "seguido_id", referencedColumnName = "perfil_id")
+            name = "seguidores" ,schema="meetify",
+            joinColumns = @JoinColumn(name = "seguidor_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "seguido_id", nullable = false)
     )
-    private List<Perfil> seguidos;
+    private List<Perfil> seguidos = new ArrayList<>(0);
 
-    // Relación muchos a muchos para los seguidores (inverse)
-    @ManyToMany(mappedBy = "seguidos")
-    private List<Perfil> seguidores;
+    // Relación inversa para obtener a los seguidores
+    @ManyToMany(mappedBy = "seguidos", fetch = FetchType.LAZY)
+    private List<Perfil> seguidores = new ArrayList<>();
 }
