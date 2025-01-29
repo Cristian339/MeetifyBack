@@ -14,7 +14,7 @@ import java.util.List;
 public class PublicacionController {
 
     private PublicacionService service;
-/*
+
 
 
     @GetMapping("/all")
@@ -27,7 +27,7 @@ public class PublicacionController {
     public List<PublicacionDTO> seguidos(){
         return service.getSeguidos();
     }
-*/
+
 
     @PostMapping("/crear")
     public PublicacionDTO guardar(@RequestBody PublicacionDTO publicacionDTO){

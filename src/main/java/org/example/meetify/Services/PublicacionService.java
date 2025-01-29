@@ -32,7 +32,7 @@ public class PublicacionService {
     private PerfilCategoriaService perfilCategoriaService;
 
     private final CategoriaRepository categoriaRepository;
-/*
+
 
     public List<PublicacionDTO> getAll() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
@@ -92,7 +92,7 @@ public class PublicacionService {
         }
         return publicaciones;
     }
-*/
+
 
     public PublicacionDTO aniadirPublicacion(PublicacionDTO publicacionDTO){
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
