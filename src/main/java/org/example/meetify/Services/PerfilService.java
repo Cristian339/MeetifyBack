@@ -5,6 +5,7 @@ import org.example.meetify.DTO.PerfilDTO;
 import org.example.meetify.Mappers.PerfilMapper;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.models.Perfil;
+import org.example.meetify.models.Usuario;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -45,6 +46,15 @@ public class PerfilService {
         return perfilDTOS;
     }
 
+
+
+
+
+    public List<Perfil> buscar(String nombre, String apellidos, String correoElectronico) {
+        return perfilRepository.findByNombreAndApellidosAndCorreoElectronico(nombre, apellidos, correoElectronico);
+    }
+
+
     public Perfil getById(Integer id){
         return perfilRepository.findById(id).orElse(null);
     }
@@ -80,5 +90,15 @@ public class PerfilService {
 
     public void eliminar(Perfil perfil){
         perfilRepository.delete(perfil);
+    }
+
+    public PerfilDTO getPerfilDTOPorId(Integer id){
+        Perfil perfil = getById(id);
+        return perfilMapper.toDTO(perfil);
+    }
+
+
+    public Perfil buscarPorUsuario(Usuario usuario){
+        return perfilRepository.findTopByUsuario(usuario);
     }
 }

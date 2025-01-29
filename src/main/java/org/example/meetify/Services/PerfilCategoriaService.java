@@ -20,7 +20,6 @@ public class PerfilCategoriaService {
     }
 
 
-    // Método para obtener las categorías elegidas por un perfil
     public List<Categoria> obtenerCategoriasPorPerfil(Perfil perfil) {
         List<PerfilCategoria> usuarioCategorias = repository.findByPerfil(perfil);
         return usuarioCategorias.stream()

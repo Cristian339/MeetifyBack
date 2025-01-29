@@ -1,16 +1,15 @@
-
 -- Dropear tablas existentes (en orden para evitar conflictos por claves foráneas)
-DROP TABLE IF EXISTS meetify.denuncia CASCADE;
-DROP TABLE IF EXISTS meetify.notificacion CASCADE;
-DROP TABLE IF EXISTS meetify.mensaje CASCADE;
-DROP TABLE IF EXISTS meetify.calificacion CASCADE;
-DROP TABLE IF EXISTS meetify.publicacion_perfil CASCADE;
-DROP TABLE IF EXISTS meetify.publicacion CASCADE;
-DROP TABLE IF EXISTS meetify.perfil_categoria CASCADE;
-DROP TABLE IF EXISTS meetify.categoria CASCADE;
-DROP TABLE IF EXISTS meetify.perfil CASCADE;
-DROP TABLE IF EXISTS meetify.usuario CASCADE;
-DROP TABLE IF EXISTS meetify.seguidores CASCADE;
+DROP TABLE IF EXISTS denuncia CASCADE;
+DROP TABLE IF EXISTS notificacion CASCADE;
+DROP TABLE IF EXISTS mensaje CASCADE;
+DROP TABLE IF EXISTS calificacion CASCADE;
+DROP TABLE IF EXISTS publicacion_perfil CASCADE;
+DROP TABLE IF EXISTS publicacion CASCADE;
+DROP TABLE IF EXISTS perfil_categoria CASCADE;
+DROP TABLE IF EXISTS categoria CASCADE;
+DROP TABLE IF EXISTS perfil CASCADE;
+DROP TABLE IF EXISTS usuario CASCADE;
+DROP TABLE IF EXISTS seguidores CASCADE;
 -- Crear tabla usuario
 CREATE TABLE usuario (
                                  usuario_id SERIAL PRIMARY KEY,
@@ -22,18 +21,18 @@ CREATE TABLE usuario (
 
 -- Crear tabla perfil
 CREATE TABLE perfil (
-                                perfil_id SERIAL PRIMARY KEY,
-                                usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
-                                nombre VARCHAR(100) NOT NULL,
-                                apellidos VARCHAR(100) NOT NULL,
-                                correo_electronico VARCHAR(100) UNIQUE NOT NULL,
-                                puntaje_total INT DEFAULT 0,
-                                fecha_nacimiento DATE,
-                                pais VARCHAR(50),
-                                genero VARCHAR(20),
-                                biografia TEXT,
-                                privado BOOLEAN DEFAULT FALSE,
-                                baneado BOOLEAN DEFAULT FALSE
+                        perfil_id SERIAL PRIMARY KEY,
+                        usuario_id INT NOT NULL REFERENCES usuario(usuario_id) ON DELETE CASCADE,
+                        nombre VARCHAR(100) NOT NULL,
+                        apellidos VARCHAR(100) NOT NULL,
+                        correo_electronico VARCHAR(100) UNIQUE NOT NULL,
+                        puntaje_total INT DEFAULT 0,
+                        fecha_nacimiento DATE,
+                        pais VARCHAR(50),
+                        genero INT,
+                        biografia TEXT,
+                        privado BOOLEAN DEFAULT FALSE,
+                        baneado BOOLEAN DEFAULT FALSE
 );
 
 -- Crear tabla categoria
@@ -116,7 +115,7 @@ CREATE TABLE seguidores (
                                     fecha_seguimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
+-- Crear índices para mejorar rendimiento
 CREATE INDEX idx_perfil_categoria ON meetify.perfil_categoria(perfil_id, categoria_id);
 CREATE INDEX idx_publicacion_categoria ON meetify.publicacion(categoria_id);
 CREATE INDEX idx_calificacion_publicacion ON meetify.calificacion(publicacion_id);

@@ -72,13 +72,13 @@ public class PublicacionService {
 
 
 
+
         List<PublicacionDTO> publicaciones = new ArrayList<>();
 
 
 
 
         for (PublicacionDTO p : todas){
-            System.out.println(p.getNombrePerfil());
             Usuario us = usuarioService.obtenerUsuarioPorNombre(p.getNombrePerfil());
             Perfil perfilPubli = perfilService.obtenerPerfilPorCorreo(us.getCorreoElectronico());
 

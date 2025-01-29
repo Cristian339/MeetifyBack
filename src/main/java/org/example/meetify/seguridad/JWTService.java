@@ -6,7 +6,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.example.meetify.Services.PerfilService;
+import org.example.meetify.Services.UsuarioService;
+import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,12 @@ public class JWTService {
 
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private PerfilService perfilService;
 
     /**
      * Método para generar token de acceso a través de los datos
@@ -78,5 +88,14 @@ public class JWTService {
     private Key getSignInKey(){
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public Perfil extraerPerfilToken(String token){
+        String tokenSinCabecera = token.substring(7);
+        TokenDataDTO tokenDataDTO = extractTokenData(tokenSinCabecera);
+        Usuario usuarioLogueado = (Usuario) usuarioService.loadUserByUsername(tokenDataDTO.getUsername());
+        Perfil perfilUsuarioLogueado = perfilService.buscarPorUsuario(usuarioLogueado);
+        return perfilUsuarioLogueado;
+
     }
 }
