@@ -1,17 +1,13 @@
 package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
-import org.example.meetify.DTO.LoginDTO;
+
 import org.example.meetify.DTO.RegistroDTO;
-import org.example.meetify.DTO.RespuestaDTO;
+
 import org.example.meetify.Enum.Rol;
 import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Usuario;
-import org.example.meetify.seguridad.JWTService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +19,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-import static org.example.meetify.seguridad.AuthService.getRespuestaDTOResponseEntity;
 
 @Service
 @AllArgsConstructor
@@ -33,10 +28,6 @@ public class UsuarioService implements UserDetailsService {
     private final PerfilService perfilService;
     private final PasswordEncoder codificadorContrasenia;
 
-    public Usuario obtenerUsuarioPorCorreo(String correoElectronico) {
-        Optional<Usuario> usuario = usuarioRepository.findTopByCorreoElectronico(correoElectronico);
-        return usuario.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ese correo"));
-    }
 
     public Usuario obtenerUsuarioPorNombre(String nombreUsuario) {
         Optional<Usuario> usuario = usuarioRepository.findTopByNombreUsuario(nombreUsuario);

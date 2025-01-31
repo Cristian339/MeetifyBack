@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface PublicacionRepository extends JpaRepository<Publicacion, Integer> {
     List<Publicacion> findByUsuarioCreador(Usuario usuarioCreador);
+
 }

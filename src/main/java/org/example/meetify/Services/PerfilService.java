@@ -1,11 +1,16 @@
 package org.example.meetify.Services;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.PerfilDTO;
 import org.example.meetify.Mappers.PerfilMapper;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Usuario;
+import org.slf4j.Logger;
+import org.example.meetify.Enum.Genero;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -88,6 +93,26 @@ public class PerfilService {
         return perfilMapper.toDTO(perfil);
     }
 
+    @Transactional
+    public PerfilDTO actualizarBiografia(Integer id, ActualizarBiografiaDTO dto) {
+        Logger logger = LoggerFactory.getLogger(PerfilService.class);
+        Perfil perfil = perfilRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.error("Perfil no encontrado con id: {}", id);
+                    return new IllegalArgumentException("Perfil no encontrado con id: " + id);
+                });
+
+        if (dto.getPais() != null) perfil.setPais(dto.getPais());
+        if (dto.getGenero() != null) {
+            perfil.setGenero(dto.getGenero());
+        }
+        if (dto.getImagenUrl() != null) perfil.setImagenUrl(dto.getImagenUrl());
+        if (dto.getBiografia() != null) perfil.setBiografia(dto.getBiografia());
+
+        Perfil updatedPerfil = perfilRepository.save(perfil);
+        logger.info("Perfil actualizado con id: {}", id);
+        return perfilMapper.toDTO(updatedPerfil);
+    }
 
     public Perfil buscarPorUsuario(Usuario usuario){
         return perfilRepository.findTopByUsuario(usuario);

@@ -14,5 +14,7 @@ public interface PerfilRepository extends JpaRepository<Perfil, Integer> {
     Optional<Perfil> findByCorreoElectronico(String correoElectronico);
     List<Perfil> findByNombreAndApellidosAndCorreoElectronico(String nombre, String apellidos, String correoElectronico);
     Perfil findTopByUsuario(Usuario usuario);
+    Optional<Perfil> findByUsuario(Usuario usuario);
+
 }
 

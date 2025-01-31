@@ -96,6 +96,5 @@ public class JWTService {
         Usuario usuarioLogueado = (Usuario) usuarioService.loadUserByUsername(tokenDataDTO.getUsername());
         Perfil perfilUsuarioLogueado = perfilService.buscarPorUsuario(usuarioLogueado);
         return perfilUsuarioLogueado;
-
     }
 }

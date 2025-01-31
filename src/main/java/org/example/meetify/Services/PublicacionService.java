@@ -1,8 +1,10 @@
 package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
+import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.Repositories.CategoriaRepository;
+import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.Repositories.PublicacionRepository;
 import org.example.meetify.models.Categoria;
 import org.example.meetify.models.Perfil;
@@ -10,6 +12,7 @@ import org.example.meetify.models.Publicacion;
 import org.example.meetify.models.Usuario;
 import org.example.meetify.seguridad.JWTFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,8 @@ public class PublicacionService {
     private PerfilCategoriaService perfilCategoriaService;
 
     private final CategoriaRepository categoriaRepository;
+
+    private final PerfilRepository perfilRepository;
 
 
     public List<PublicacionDTO> getAll() {
@@ -170,6 +175,8 @@ public class PublicacionService {
 
         return publicacionDTOS;
     }
+
+
 
 
 
