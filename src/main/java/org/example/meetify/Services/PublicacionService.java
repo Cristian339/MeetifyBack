@@ -116,4 +116,19 @@ public class PublicacionService {
 
     }
 
+
+
+    public void cambiarCategoriaPerfil(List<String> categorias){
+        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
+        for(String c : categorias){
+            Categoria cat = categoriaRepository.findByNombre(c);
+            if (cat != null){
+                perfilCategoriaService.anadirCategoriaAPerfil(perfil,cat);
+            }
+        }
+    }
+
+
 }

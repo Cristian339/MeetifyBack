@@ -3,9 +3,11 @@ package org.example.meetify.Services;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PerfilDTO;
 import org.example.meetify.Mappers.PerfilMapper;
+import org.example.meetify.Repositories.CategoriaRepository;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Usuario;
+import org.example.meetify.seguridad.JWTFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -18,8 +20,16 @@ import java.util.Optional;
 @AllArgsConstructor
 @Validated
 public class PerfilService {
+
     private PerfilRepository perfilRepository;
+
     private PerfilMapper perfilMapper;
+
+    private CategoriaRepository categoriaRepository;
+
+    private PerfilCategoriaService perfilCategoriaService;
+
+
 
     public Perfil guardarPerfil(Perfil perfil){
         return perfilRepository.save(perfil);
@@ -67,11 +77,12 @@ public class PerfilService {
                 mensaje = "Perfil eliminado correctamente";
             }
         } catch (Exception e) {
-            mensaje =  "No se pudoeliminar el perfil";
+            mensaje =  "No se pudo eliminar el perfil";
         }
 
         return mensaje;
     }
+
 
 
     public Perfil obtenerPerfilPorCorreo(String correoElectronico) {
