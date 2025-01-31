@@ -3,9 +3,7 @@ package org.example.meetify.Services;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.Repositories.CategoriaRepository;
-import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.Repositories.PublicacionRepository;
-import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.models.Categoria;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
@@ -115,6 +113,66 @@ public class PublicacionService {
         return publicacionDTO;
 
     }
+
+    public PublicacionDTO actualizarPublicacion(Integer id, PublicacionDTO publicacionDTO) {
+        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        Publicacion publicacion = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Publicacion no encontrada con id: " + id));
+
+        if (!publicacion.getUsuarioCreador().equals(usuario)) {
+            throw new SecurityException("No tienes permiso para actualizar esta publicacion");
+        }
+
+        Categoria categoria = categoriaRepository.findByNombre(publicacionDTO.getCategoria());
+        if (categoria == null) {
+            throw new IllegalArgumentException("Categoria no encontrada: " + publicacionDTO.getCategoria());
+        }
+
+        publicacion.setCategoria(categoria);
+        publicacion.setTitulo(publicacionDTO.getTitulo());
+        publicacion.setDescripcion(publicacionDTO.getDescripcion());
+        publicacion.setUbicacion(publicacionDTO.getUbicacion());
+        publicacion.setImagenUrl(publicacionDTO.getImageUrl());
+        publicacion.setFechaIni(publicacionDTO.getFechaIni());
+        publicacion.setFechaFin(publicacionDTO.getFechaFin());
+        repository.save(publicacion);
+
+        return publicacionDTO;
+    }
+
+    public String eliminarPublicacion(Integer id) {
+        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        Publicacion publicacion = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Publicacion no encontrada con id: " + id));
+
+        if (!publicacion.getUsuarioCreador().equals(usuario)) {
+            throw new SecurityException("No tienes permiso para eliminar esta publicacion");
+        }
+
+        repository.delete(publicacion);
+        return "Publicacion eliminada exitosamente";
+    }
+
+    public List<PublicacionDTO> verMisPublicaciones() {
+        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        List<Publicacion> publicaciones = repository.findByUsuarioCreador(usuario);
+        List<PublicacionDTO> publicacionDTOS = new ArrayList<>();
+
+        for (Publicacion p : publicaciones) {
+            PublicacionDTO dto = new PublicacionDTO(p.getUsuarioCreador().getNombreUsuario(),
+                    p.getCategoria().getNombre(), p.getImagenUrl(), p.getTitulo(), p.getDescripcion(),
+                    p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
+            publicacionDTOS.add(dto);
+        }
+
+        return publicacionDTOS;
+    }
+
+
+
 
 
 

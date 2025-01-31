@@ -34,6 +34,16 @@ public class PublicacionController {
         return service.aniadirPublicacion(publicacionDTO);
     }
 
+    @GetMapping("all/mi")
+    public List<PublicacionDTO> getMyPublications(){
+        return service.verMisPublicaciones();
+    }
+
+    @DeleteMapping("/{idPub}")
+    public String eliminarPublicacion(@PathVariable Integer idPub) {
+        return service.eliminarPublicacion(idPub);
+    }
+
 
 
 }
