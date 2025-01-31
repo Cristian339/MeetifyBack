@@ -1,20 +1,24 @@
 package org.example.meetify.Controller;
 
+import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.PerfilDTO;
 import org.example.meetify.Services.PerfilService;
 import org.example.meetify.models.Perfil;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.example.meetify.seguridad.JWTService;
+import org.springframework.web.bind.annotation.*;
 
-public class biografia {
+@RestController
+@RequestMapping("/biografia")
+@AllArgsConstructor
+public class BiografiaController {
 private PerfilService perfilService;
+private JWTService jwtService;
 
-/*    @PostMapping("/biografia")
+    @PostMapping("/actualizar")
     public PerfilDTO actualizarBiografia(@RequestHeader("Authorization") String token, @RequestBody ActualizarBiografiaDTO actualizarBiografiaDTO) {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
         return perfilService.actualizarBiografia(perfilLogueado.getId(), actualizarBiografiaDTO);
-    }*/
+    }
 
 }
