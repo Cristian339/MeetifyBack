@@ -24,6 +24,7 @@ public class JWTFilter extends OncePerRequestFilter {
     private UsuarioService usuarioService;
 
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

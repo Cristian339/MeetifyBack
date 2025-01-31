@@ -8,6 +8,7 @@ import org.example.meetify.Enum.Rol;
 import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Usuario;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,12 +20,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import static org.example.meetify.seguridad.AuthService.getRespuestaDTOResponseEntity;
 
 @Service
 @AllArgsConstructor
 public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
+
     private final PerfilService perfilService;
     private final PasswordEncoder codificadorContrasenia;
 
