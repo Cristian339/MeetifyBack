@@ -32,4 +32,7 @@ public class Mensaje {
 
     @Column(name = "enviado_en")
     private LocalDateTime enviadoEn;
+
+    @Column(name = "room_id", nullable = false)
+    private Integer roomId;
 }
