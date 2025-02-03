@@ -116,6 +116,15 @@ CREATE TABLE seguidores (
                                     fecha_seguimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Crear tabla compartir
+CREATE TABLE compartir (
+                           compartir_id SERIAL PRIMARY KEY,
+                           perfil_id INT NOT NULL REFERENCES perfil(perfil_id) ON DELETE CASCADE,
+                           publicacion_id INT NOT NULL REFERENCES publicacion(publicacion_id) ON DELETE CASCADE,
+                           fecha_compartido TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 -- Crear índices para mejorar rendimiento
 CREATE INDEX idx_perfil_categoria ON meetify.perfil_categoria(perfil_id, categoria_id);
 CREATE INDEX idx_publicacion_categoria ON meetify.publicacion(categoria_id);

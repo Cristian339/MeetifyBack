@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -61,6 +62,10 @@ public class PublicacionService {
 
         return publicacionDTOS;
 
+    }
+
+    public Publicacion encontrarPublicacionPorId(Integer id) {
+        return repository.findById(id).orElse(null);
     }
 
     public List<PublicacionDTO> getSeguidos(){
@@ -183,6 +188,7 @@ public class PublicacionService {
 
     public void cambiarCategoriaPerfil(List<String> categorias){
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        System.out.println(correoAutenticado);
         Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
         for(String c : categorias){

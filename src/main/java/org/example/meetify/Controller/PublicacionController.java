@@ -2,7 +2,9 @@ package org.example.meetify.Controller;
 
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
+import org.example.meetify.Services.CompartirService;
 import org.example.meetify.Services.PublicacionService;
+import org.example.meetify.models.Publicacion;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +16,6 @@ import java.util.List;
 public class PublicacionController {
 
     private PublicacionService service;
-
-
 
     @GetMapping("/all")
     public List<PublicacionDTO> general(){
@@ -43,7 +43,5 @@ public class PublicacionController {
     public String eliminarPublicacion(@PathVariable Integer idPub) {
         return service.eliminarPublicacion(idPub);
     }
-
-
 
 }
