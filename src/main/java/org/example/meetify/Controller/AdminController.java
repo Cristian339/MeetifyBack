@@ -3,7 +3,9 @@ package org.example.meetify.Controller;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PerfilDTO;
 import org.example.meetify.DTO.PublicacionDTO;
+import org.example.meetify.DTO.PublicacionIdDTO;
 import org.example.meetify.Services.PerfilService;
+import org.example.meetify.Services.PublicacionService;
 import org.example.meetify.Services.UsuarioService;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Usuario;
@@ -20,6 +22,8 @@ public class AdminController {
     private PerfilService perfilService;
 
     private UsuarioService usuarioService;
+
+    private PublicacionService publicacionService;
 
     @GetMapping("/baneados")
     public List<PerfilDTO> obtenerPerfilesBaneados() {
@@ -45,5 +49,13 @@ public class AdminController {
     public void baneo(@PathVariable String correo) {
         perfilService.ban(correo);
     }
+
+
+    @GetMapping("/publicaciones/{correo}")
+    public List<PublicacionIdDTO> publicacionesPerfil(@PathVariable String correo){
+        return publicacionService.publicacionesPerfil(correo);
+    }
+
+
 
 }

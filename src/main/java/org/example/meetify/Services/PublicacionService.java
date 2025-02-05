@@ -3,6 +3,7 @@ package org.example.meetify.Services;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.PublicacionDTO;
+import org.example.meetify.DTO.PublicacionIdDTO;
 import org.example.meetify.Repositories.CategoriaRepository;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.Repositories.PublicacionRepository;
@@ -176,6 +177,25 @@ public class PublicacionService {
                     p.getCategoria().getNombre(), p.getImagenUrl(), p.getTitulo(), p.getDescripcion(),
                     p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
             publicacionDTOS.add(dto);
+        }
+
+        return publicacionDTOS;
+    }
+
+
+    public List<PublicacionIdDTO> publicacionesPerfil(String correo) {
+        Perfil perfil = perfilService.obtenerPerfilPorCorreo(correo);
+
+        List<Publicacion> publicaciones = repository.findAll();
+        List<PublicacionIdDTO> publicacionDTOS = new ArrayList<>();
+
+        for (Publicacion p : publicaciones) {
+            if(p.getUsuarioCreador().getCorreoElectronico() == perfil.getCorreoElectronico()){
+                PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(),p.getUsuarioCreador().getNombreUsuario(),
+                        p.getCategoria().getNombre(), p.getImagenUrl(), p.getTitulo(), p.getDescripcion(),
+                        p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
+                publicacionDTOS.add(dto);
+            }
         }
 
         return publicacionDTOS;
