@@ -7,17 +7,32 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
-@EnableWebSocketMessageBroker // Habilita el soporte para WebSocket, y configura un broker de mensajes
+@EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        //registry.addEndpoint("/websocket").withSockJS();
-        registry.addEndpoint("/websocket").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint("/gs-guide-websocket")
+                .setAllowedOriginPatterns("*") // Use allowedOriginPatterns instead of allowedOrigins
+                .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/tema"); // Para enviar mensajes a los clientes
-        registry.setApplicationDestinationPrefixes("/app"); // Para recibir mensajes de los clientes
+        registry.enableSimpleBroker("/topic");
+        registry.setApplicationDestinationPrefixes("/app");
     }
 }
+
+/*public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        //registry.addEndpoint("/websocket").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
+    }
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.setApplicationDestinationPrefixes("/chat"); // Para recibir mensajes de los clientes
+        registry.enableSimpleBroker("/tema"); // Para enviar mensajes a los clientes
+    }
+}*/
