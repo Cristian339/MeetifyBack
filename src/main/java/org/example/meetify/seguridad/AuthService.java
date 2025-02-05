@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.LoginDTO;
 import org.example.meetify.DTO.RespuestaDTO;
 import org.example.meetify.Repositories.UsuarioRepository;
+import org.example.meetify.Services.UsuarioService;
 import org.example.meetify.models.Usuario;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class AuthService {
     private UsuarioRepository usuarioRepository;
     private PasswordEncoder passwordEncoder;
     private JWTService jwtService;
+    private UsuarioService usuarioService;
 
     public ResponseEntity<RespuestaDTO> iniciarSesion(LoginDTO dto){
 
@@ -34,16 +36,21 @@ public class AuthService {
         if (usuarioOpcional.isPresent()) {
             Usuario usuario = usuarioOpcional.get();
 
+            String rol = usuario.getRol().toString();  // Obtener el rol del usuario
             // Verificar la contraseña
             if (passwordEncoder.matches(dto.getContrasenia(), usuario.getPassword())) {
 
                 // Contraseña válida, devolver token de acceso
                 String token = jwtService.generateToken(usuario);
+
+                // Devolver RespuestaDTO con el rol incluido
                 return ResponseEntity
                         .ok(RespuestaDTO
                                 .builder()
                                 .estado(HttpStatus.OK.value())
-                                .token(token).build());
+                                .token(token)
+                                .rol(rol)
+                                .build());
             } else {
                 throw new BadCredentialsException("Contraseña incorrecta");
             }
@@ -51,5 +58,6 @@ public class AuthService {
             throw new UsernameNotFoundException("Usuario no encontrado");
         }
     }
+
 
 }

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.PerfilDTO;
+import org.example.meetify.Enum.Rol;
 import org.example.meetify.Mappers.PerfilMapper;
 import org.example.meetify.Repositories.CategoriaRepository;
 import org.example.meetify.Repositories.PerfilRepository;
@@ -28,15 +29,11 @@ public class PerfilService {
 
     private PerfilMapper perfilMapper;
 
-    private CategoriaRepository categoriaRepository;
-
-    private PerfilCategoriaService perfilCategoriaService;
-
-
-
     public Perfil guardarPerfil(Perfil perfil){
         return perfilRepository.save(perfil);
     }
+
+
 
     public List<PerfilDTO> getAll(){
 
@@ -125,6 +122,49 @@ public class PerfilService {
 
     public Perfil buscarPorUsuario(Usuario usuario){
         return perfilRepository.findTopByUsuario(usuario);
+    }
+
+
+    public List<PerfilDTO> listaDeBaneados(){
+        List<PerfilDTO> baneados = new ArrayList<>();
+        List<Perfil> todos = perfilRepository.findAll();
+
+        for (Perfil p : todos){
+            if(p.getBaneado() && p.getUsuario().getRol() == Rol.PERFIL){
+                PerfilDTO dto = new PerfilDTO();
+                dto.setNombre(p.getNombre());
+                dto.setApellidos(p.getApellidos());
+                dto.setCorreoElectronico(p.getCorreoElectronico());
+                dto.setNombreUsuario(p.getNombre());
+                baneados.add(dto);
+            }
+        }
+        return baneados;
+    }
+
+    public List<PerfilDTO> listaDeNoBaneados(){
+        List<PerfilDTO> baneados = new ArrayList<>();
+        List<Perfil> todos = perfilRepository.findAll();
+
+        for (Perfil p : todos){
+            if(!p.getBaneado() && p.getUsuario().getRol() == Rol.PERFIL){
+                PerfilDTO dto = perfilMapper.toDTO(p);
+                baneados.add(dto);
+            }
+        }
+        return baneados;
+    }
+
+    public void ban(String correo){
+        Perfil perfil = obtenerPerfilPorCorreo(correo);
+
+        if(perfil.getBaneado()){
+            perfil.setBaneado(false);
+        }else{
+            perfil.setBaneado(true);
+        }
+
+        perfilRepository.save(perfil);
     }
 }
 
