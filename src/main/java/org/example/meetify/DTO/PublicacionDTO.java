@@ -13,7 +13,8 @@ public class PublicacionDTO {
 
     private String nombrePerfil;
     private String categoria;
-    private String imageUrl;
+    private String imageUrlPub;
+    private String imageUrlPerfil;
     private String titulo;
     private String descripcion;
     private String ubicacion;

@@ -59,7 +59,7 @@ public class Perfil {
     private Boolean baneado;
 
     @Column(name = "imagen_url", nullable = true)
-    private String imagenUrl;
+    private String imagenUrlPerfil;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, targetEntity = Perfil.class)
     @JoinTable(

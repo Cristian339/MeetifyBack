@@ -39,7 +39,7 @@ public class Publicacion {
     private LocalDate fechaFin;
 
     @Column(name = "imagen_url")
-    private String imagenUrl;
+    private String imagenUrlPub;
 
     @ManyToOne
     @JoinColumn(name = "usuario_creador_id", nullable = false)

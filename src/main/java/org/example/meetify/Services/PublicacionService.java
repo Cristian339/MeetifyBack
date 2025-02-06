@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 @AllArgsConstructor
 public class PublicacionService {
@@ -38,12 +37,10 @@ public class PublicacionService {
 
     private final PerfilRepository perfilRepository;
 
-
     public List<PublicacionIdDTO> getAll() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         List<Publicacion> publicaciones = repository.findAll();
         List<PublicacionIdDTO> publicacionDTOS = new ArrayList<>();
-
 
         Usuario us = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(us.getCorreoElectronico());
@@ -52,77 +49,68 @@ public class PublicacionService {
         for (Publicacion p : publicaciones) {
             // Filtra las publicaciones para excluir las del usuario autenticado
             if (!p.getUsuarioCreador().getCorreoElectronico().equals(perfil.getCorreoElectronico())) {
-                if(categorias.contains(p.getCategoria())){
-                    PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(),p.getUsuarioCreador().getNombreUsuario(),
-                            p.getCategoria().getNombre(),p.getImagenUrl(),p.getTitulo(),p.getDescripcion(),
-                            p.getUbicacion(),p.getFechaIni(),p.getFechaFin());
+                if (categorias.contains(p.getCategoria())) {
+                    Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(p.getUsuarioCreador().getCorreoElectronico());
+                    PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
+                            p.getCategoria().getNombre(), p.getImagenUrlPub(), p.getTitulo(), p.getDescripcion(),
+                            p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
                     publicacionDTOS.add(dto);
                 }
             }
         }
 
         return publicacionDTOS;
-
     }
 
     public Publicacion encontrarPublicacionPorId(Integer id) {
         return repository.findById(id).orElse(null);
     }
 
-    public List<PublicacionDTO> getSeguidos(){
+    public List<PublicacionDTO> getSeguidos() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
-        System.out.println(correoAutenticado);
         Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
 
         List<Publicacion> publis = repository.findAll();
         List<PublicacionDTO> todas = new ArrayList<>();
-        for(Publicacion d : publis){
+        for (Publicacion d : publis) {
+            Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(d.getUsuarioCreador().getCorreoElectronico());
             todas.add(new PublicacionDTO(d.getUsuarioCreador().getNombreUsuario(),
-                    d.getCategoria().getNombre(),d.getImagenUrl(),d.getTitulo(),d.getDescripcion(),
-                    d.getUbicacion(),d.getFechaIni(),d.getFechaFin()));
+                    d.getCategoria().getNombre(), d.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
+                    d.getTitulo(), d.getDescripcion(), d.getUbicacion(), d.getFechaIni(), d.getFechaFin()));
         }
 
-
-
-
         List<PublicacionDTO> publicaciones = new ArrayList<>();
-
-
-
-
-        for (PublicacionDTO p : todas){
+        for (PublicacionDTO p : todas) {
             Usuario us = usuarioService.obtenerUsuarioPorNombre(p.getNombrePerfil());
             Perfil perfilPubli = perfilService.obtenerPerfilPorCorreo(us.getCorreoElectronico());
 
-            if(perfil.getSeguidos().contains(perfilPubli)){
+            if (perfil.getSeguidos().contains(perfilPubli)) {
                 publicaciones.add(p);
             }
         }
         return publicaciones;
     }
 
-
-    public PublicacionDTO aniadirPublicacion(PublicacionDTO publicacionDTO){
+    public PublicacionDTO aniadirPublicacion(PublicacionDTO publicacionDTO) {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Publicacion publicacion = new Publicacion();
         Categoria categoria = categoriaRepository.findByNombre(publicacionDTO.getCategoria());
 
-        if(categoria == null){
+        if (categoria == null) {
             throw new IllegalArgumentException("Categoria no encontrada" + publicacionDTO.getCategoria());
         }
         publicacion.setCategoria(categoria);
         publicacion.setTitulo(publicacionDTO.getTitulo());
         publicacion.setDescripcion(publicacionDTO.getDescripcion());
         publicacion.setUbicacion(publicacionDTO.getUbicacion());
-        publicacion.setImagenUrl(publicacionDTO.getImageUrl());
+        publicacion.setImagenUrlPub(publicacionDTO.getImageUrlPub());
         publicacion.setUsuarioCreador(usuario);
         publicacion.setFechaIni(publicacionDTO.getFechaIni());
         publicacion.setFechaFin(publicacionDTO.getFechaFin());
         repository.save(publicacion);
         return publicacionDTO;
-
     }
 
     public PublicacionDTO actualizarPublicacion(Integer id, PublicacionDTO publicacionDTO) {
@@ -144,7 +132,7 @@ public class PublicacionService {
         publicacion.setTitulo(publicacionDTO.getTitulo());
         publicacion.setDescripcion(publicacionDTO.getDescripcion());
         publicacion.setUbicacion(publicacionDTO.getUbicacion());
-        publicacion.setImagenUrl(publicacionDTO.getImageUrl());
+        publicacion.setImagenUrlPub(publicacionDTO.getImageUrlPub());
         publicacion.setFechaIni(publicacionDTO.getFechaIni());
         publicacion.setFechaFin(publicacionDTO.getFechaFin());
         repository.save(publicacion);
@@ -173,15 +161,15 @@ public class PublicacionService {
         List<PublicacionDTO> publicacionDTOS = new ArrayList<>();
 
         for (Publicacion p : publicaciones) {
+            Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(p.getUsuarioCreador().getCorreoElectronico());
             PublicacionDTO dto = new PublicacionDTO(p.getUsuarioCreador().getNombreUsuario(),
-                    p.getCategoria().getNombre(), p.getImagenUrl(), p.getTitulo(), p.getDescripcion(),
-                    p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
+                    p.getCategoria().getNombre(), p.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
+                    p.getTitulo(), p.getDescripcion(), p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
             publicacionDTOS.add(dto);
         }
 
         return publicacionDTOS;
     }
-
 
     public List<PublicacionIdDTO> publicacionesPerfil(String correo) {
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(correo);
@@ -190,9 +178,9 @@ public class PublicacionService {
         List<PublicacionIdDTO> publicacionDTOS = new ArrayList<>();
 
         for (Publicacion p : publicaciones) {
-            if(p.getUsuarioCreador().getCorreoElectronico() == perfil.getCorreoElectronico()){
-                PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(),p.getUsuarioCreador().getNombreUsuario(),
-                        p.getCategoria().getNombre(), p.getImagenUrl(), p.getTitulo(), p.getDescripcion(),
+            if (p.getUsuarioCreador().getCorreoElectronico().equals(perfil.getCorreoElectronico())) {
+                PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
+                        p.getCategoria().getNombre(), p.getImagenUrlPub(), p.getTitulo(), p.getDescripcion(),
                         p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
                 publicacionDTOS.add(dto);
             }
@@ -201,20 +189,13 @@ public class PublicacionService {
         return publicacionDTOS;
     }
 
-
-
-
-
-
-    public void cambiarCategoriaPerfil(List<String> categorias, String correo){
+    public void cambiarCategoriaPerfil(List<String> categorias, String correo) {
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(correo);
-        for(String c : categorias){
+        for (String c : categorias) {
             Categoria cat = categoriaRepository.findByNombre(c);
-            if (cat != null){
-                perfilCategoriaService.anadirCategoriaAPerfil(perfil,cat);
+            if (cat != null) {
+                perfilCategoriaService.anadirCategoriaAPerfil(perfil, cat);
             }
         }
     }
-
-
 }
