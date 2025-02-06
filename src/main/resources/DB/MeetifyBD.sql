@@ -125,6 +125,22 @@ CREATE TABLE compartir (
 );
 
 
+INSERT INTO categoria (nombre) VALUES
+                                   ('Encuentros Sociales'),
+                                   ('Juegos y Diversión'),
+                                   ('Actividades Creativas'),
+                                   ('Ejercicio en Grupo'),
+                                   ('Convivencia en la Naturaleza'),
+                                   ('Cultura y Entretenimiento'),
+                                   ('Aprendizaje y Formación'),
+                                   ('Talleres Interactivos'),
+                                   ('Relajación y Bienestar'),
+                                   ('Paseos y Excursiones'),
+                                   ('Charlar y Socializar'),
+                                   ('Deportes Informales'),
+                                   ('Tardes de Juegos'),
+                                   ('Encuentros Comunitarios');
+
 -- Crear índices para mejorar rendimiento
 CREATE INDEX idx_perfil_categoria ON meetify.perfil_categoria(perfil_id, categoria_id);
 CREATE INDEX idx_publicacion_categoria ON meetify.publicacion(categoria_id);
