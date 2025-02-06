@@ -39,10 +39,10 @@ public class PublicacionService {
     private final PerfilRepository perfilRepository;
 
 
-    public List<PublicacionDTO> getAll() {
+    public List<PublicacionIdDTO> getAll() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         List<Publicacion> publicaciones = repository.findAll();
-        List<PublicacionDTO> publicacionDTOS = new ArrayList<>();
+        List<PublicacionIdDTO> publicacionDTOS = new ArrayList<>();
 
 
         Usuario us = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
@@ -53,7 +53,7 @@ public class PublicacionService {
             // Filtra las publicaciones para excluir las del usuario autenticado
             if (!p.getUsuarioCreador().getCorreoElectronico().equals(perfil.getCorreoElectronico())) {
                 if(categorias.contains(p.getCategoria())){
-                    PublicacionDTO dto = new PublicacionDTO(p.getUsuarioCreador().getNombreUsuario(),
+                    PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(),p.getUsuarioCreador().getNombreUsuario(),
                             p.getCategoria().getNombre(),p.getImagenUrl(),p.getTitulo(),p.getDescripcion(),
                             p.getUbicacion(),p.getFechaIni(),p.getFechaFin());
                     publicacionDTOS.add(dto);

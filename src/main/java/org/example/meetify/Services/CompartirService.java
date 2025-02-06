@@ -10,6 +10,7 @@ import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
 import org.example.meetify.models.Usuario;
 import org.example.meetify.seguridad.JWTFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +23,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CompartirService {
 
-    private final CompartirRepository compartirRepository;
-    private final PerfilService perfilService;
-    private final PublicacionService publicacionService;
-    private final JWTFilter jwtFilter;
-    private final UsuarioService usuarioService;
+    @Autowired
+    private CompartirRepository compartirRepository;
+
+    @Autowired
+    private PerfilService perfilService;
+
+    @Autowired
+    private PublicacionService publicacionService;
+
+    @Autowired
+    private JWTFilter jwtFilter;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     // Permitir a un usuario compartir una publicación
-    public PublicacionDTO compartirPublicacion(int publicacionId) {
-        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
-        System.out.println(correoAutenticado);
-        Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
-        Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
+    public PublicacionDTO compartirPublicacion(int publicacionId, Perfil perfil) {
 
         Publicacion publicacion = publicacionService.encontrarPublicacionPorId(publicacionId);
 

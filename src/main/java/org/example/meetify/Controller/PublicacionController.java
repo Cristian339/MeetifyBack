@@ -2,6 +2,7 @@ package org.example.meetify.Controller;
 
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
+import org.example.meetify.DTO.PublicacionIdDTO;
 import org.example.meetify.Services.CompartirService;
 import org.example.meetify.Services.PublicacionService;
 import org.example.meetify.models.Publicacion;
@@ -18,7 +19,7 @@ public class PublicacionController {
     private PublicacionService service;
 
     @GetMapping("/all")
-    public List<PublicacionDTO> general(){
+    public List<PublicacionIdDTO> general(){
         return service.getAll();
     }
 
