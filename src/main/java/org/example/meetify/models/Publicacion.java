@@ -41,6 +41,9 @@ public class Publicacion {
     @Column(name = "imagen_url")
     private String imagenUrlPub;
 
+    @Column(name = "imagen_url_perfil")
+    private String imagenUrlPerfil;
+
     @ManyToOne
     @JoinColumn(name = "usuario_creador_id", nullable = false)
     private Usuario usuarioCreador;
