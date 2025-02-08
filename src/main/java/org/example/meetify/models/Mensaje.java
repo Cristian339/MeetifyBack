@@ -3,7 +3,8 @@ package org.example.meetify.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -30,8 +31,11 @@ public class Mensaje {
     @JoinColumn(name = "usuario_receptor_id", nullable = false)
     private Usuario usuarioReceptor;
 
-    @Column(name = "enviado_en")
-    private LocalDateTime enviadoEn;
+    @Column(name = "fecha_enviado")
+    private LocalDate fechaEnviado;
+
+    @Column(name = "hora_enviado")
+    private LocalTime horaEnviado;
 
     @Column(name = "room_id", nullable = false)
     private Integer roomId;
