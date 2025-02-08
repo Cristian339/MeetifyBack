@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -190,7 +191,7 @@ public class PublicacionService {
         List<PublicacionIdDTO> publicacionDTOS = new ArrayList<>();
 
         for (Publicacion p : publicaciones) {
-            if(p.getUsuarioCreador().getCorreoElectronico() == perfil.getCorreoElectronico()){
+            if(Objects.equals(p.getUsuarioCreador().getCorreoElectronico(), perfil.getCorreoElectronico())){
                 PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(),p.getUsuarioCreador().getNombreUsuario(),
                         p.getCategoria().getNombre(), p.getImagenUrl(), p.getTitulo(), p.getDescripcion(),
                         p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
