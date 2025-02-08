@@ -15,9 +15,9 @@ public class BiografiaController {
 private PerfilService perfilService;
 private JWTService jwtService;
 
-    @PostMapping("/actualizar")
-    public PerfilDTO actualizarBiografia(@RequestHeader("Authorization") String token, @RequestBody ActualizarBiografiaDTO actualizarBiografiaDTO) {
-        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+    @PostMapping("/actualizar/{correo}")
+    public PerfilDTO actualizarBiografia(@RequestBody ActualizarBiografiaDTO actualizarBiografiaDTO,@PathVariable String correo) {
+        Perfil perfilLogueado = perfilService.obtenerPerfilPorCorreo(correo);
         return perfilService.actualizarBiografia(perfilLogueado.getId(), actualizarBiografiaDTO);
     }
 

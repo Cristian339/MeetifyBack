@@ -37,6 +37,11 @@ public class UsuarioService implements UserDetailsService {
         return usuario.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ese nombre de usuario"));
     }
 
+    public Usuario obtenerUsuarioPorCorro(String correo) {
+        Optional<Usuario> usuario = usuarioRepository.findTopByCorreoElectronico(correo);
+        return usuario.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ese nombre de usuario"));
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String nombreUsuario) throws UsernameNotFoundException {
@@ -63,6 +68,7 @@ public class UsuarioService implements UserDetailsService {
         perfil.setNombre(dto.getNombre());
         perfil.setApellidos(dto.getApellidos());
         perfil.setCorreoElectronico(dto.getCorreoElectronico());
+        perfil.setBaneado(false);
 
         // FECHA NACIMIENTO (STRING) -> LOCALDATE
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

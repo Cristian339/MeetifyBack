@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/ws/**").permitAll()
 
                         //.requestMatchers("/publicacion/**").hasAuthority("PERFIL")
-                        //.requestMatchers("/aptitud/**").hasAuthority("ADMIN")
+                        //.requestMatchers("/admin/**").hasAuthority("ADMIN")
 /*                        .anyRequest().authenticated())**/
                         .anyRequest().permitAll())
                 .authenticationProvider(authenticationProvider)

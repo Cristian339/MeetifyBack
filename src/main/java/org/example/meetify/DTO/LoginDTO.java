@@ -8,5 +8,4 @@ import lombok.Data;
 public class LoginDTO {
     private String nombreUsuario;
     private String contrasenia;
-
 }
