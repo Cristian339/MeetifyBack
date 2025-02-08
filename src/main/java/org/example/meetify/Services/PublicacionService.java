@@ -83,7 +83,7 @@ public class PublicacionService {
         List<PublicacionDTO> todas = new ArrayList<>();
         for(Publicacion d : publis){
             todas.add(new PublicacionDTO(d.getUsuarioCreador().getNombreUsuario(),
-                    d.getCategoria().getNombre(),d.getImagenUrl(),d.getTitulo(),d.getDescripcion(),
+                    d.getCategoria().getNombre(),d.getImagenUrlPerfil(),d.getImagenUrlPub(),d.getTitulo(),d.getDescripcion(),
                     d.getUbicacion(),d.getFechaIni(),d.getFechaFin()));
         }
 
@@ -120,7 +120,8 @@ public class PublicacionService {
         publicacion.setTitulo(publicacionDTO.getTitulo());
         publicacion.setDescripcion(publicacionDTO.getDescripcion());
         publicacion.setUbicacion(publicacionDTO.getUbicacion());
-        publicacion.setImagenUrl(publicacionDTO.getImageUrl());
+        publicacion.setImagenUrlPerfil(publicacionDTO.getImageUrlPerfil());
+        publicacion.setImagenUrlPub(publicacionDTO.getImageUrlPub());
         publicacion.setUsuarioCreador(usuario);
         publicacion.setFechaIni(publicacionDTO.getFechaIni());
         publicacion.setFechaFin(publicacionDTO.getFechaFin());
@@ -148,7 +149,8 @@ public class PublicacionService {
         publicacion.setTitulo(publicacionDTO.getTitulo());
         publicacion.setDescripcion(publicacionDTO.getDescripcion());
         publicacion.setUbicacion(publicacionDTO.getUbicacion());
-        publicacion.setImagenUrl(publicacionDTO.getImageUrl());
+        publicacion.setImagenUrlPerfil(publicacionDTO.getImageUrlPerfil());
+        publicacion.setImagenUrlPub(publicacionDTO.getImageUrlPub());
         publicacion.setFechaIni(publicacionDTO.getFechaIni());
         publicacion.setFechaFin(publicacionDTO.getFechaFin());
         repository.save(publicacion);
@@ -269,7 +271,7 @@ public class PublicacionService {
         for (Publicacion p : publicaciones) {
             Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(p.getUsuarioCreador().getCorreoElectronico());
             PublicacionDTO dto = new PublicacionDTO(p.getUsuarioCreador().getNombreUsuario(),
-                    p.getCategoria().getNombre(), p.getImagenUrl(), p.getTitulo(), p.getDescripcion(),
+                    p.getCategoria().getNombre(), p.getImagenUrlPerfil(),p.getImagenUrlPub(), p.getTitulo(), p.getDescripcion(),
                     p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
             publicacionDTOS.add(dto);
         }
@@ -287,7 +289,7 @@ public class PublicacionService {
         for (Publicacion p : publicaciones) {
             if(Objects.equals(p.getUsuarioCreador().getCorreoElectronico(), perfil.getCorreoElectronico())){
                 PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(),p.getUsuarioCreador().getNombreUsuario(),
-                        p.getCategoria().getNombre(), p.getImagenUrl(), p.getTitulo(), p.getDescripcion(),
+                        p.getCategoria().getNombre(), p.getImagenUrlPub(), p.getTitulo(), p.getDescripcion(),
                         p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
                 publicacionDTOS.add(dto);
             }
@@ -301,7 +303,7 @@ public class PublicacionService {
 
 
 
-    public void cambiarCategoriaPerfil(List<String> categorias){
+    public void cambiarCategoriaPerfil(List<String> categorias, String correo){
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         System.out.println(correoAutenticado);
         Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
