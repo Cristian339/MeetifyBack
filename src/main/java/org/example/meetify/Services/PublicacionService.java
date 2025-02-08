@@ -107,6 +107,7 @@ public class PublicacionService {
         publicacion.setDescripcion(publicacionDTO.getDescripcion());
         publicacion.setUbicacion(publicacionDTO.getUbicacion());
         publicacion.setImagenUrlPub(publicacionDTO.getImageUrlPub());
+        publicacion.setImagenUrlPerfil(publicacionDTO.getImageUrlPerfil());
         publicacion.setUsuarioCreador(usuario);
         publicacion.setFechaIni(publicacionDTO.getFechaIni());
         publicacion.setFechaFin(publicacionDTO.getFechaFin());
@@ -169,11 +170,31 @@ public class PublicacionService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El creador de la publicacion no puede unirse a su propia publicacion");
         }
 
+        boolean isAlreadyMember = publicacionPerfilRepository.findByPerfilAndPublicacion(perfil, publicacion).isPresent();
+        if (isAlreadyMember) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya eres miembro de esta publicacion");
+        }
+
         PublicacionPerfil publicacionPerfil = new PublicacionPerfil();
         publicacionPerfil.setPerfil(perfil);
         publicacionPerfil.setPublicacion(publicacion);
 
         publicacionPerfilRepository.save(publicacionPerfil);
+    }
+
+    public void salirPublicacion(Integer idPublicacion) {
+        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        Perfil perfil = perfilRepository.findById(usuario.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil no encontrado"));
+
+        Publicacion publicacion = publicacionRepository.findById(idPublicacion)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publicacion no encontrada"));
+
+        PublicacionPerfil publicacionPerfil = publicacionPerfilRepository.findByPerfilAndPublicacion(perfil, publicacion)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se ha encontrado la relacion entre el perfil y la publicacion"));
+
+        publicacionPerfilRepository.delete(publicacionPerfil);
     }
 
     // Metodo para obtener los usuarios unidos a una publicacion

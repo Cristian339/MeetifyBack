@@ -69,4 +69,10 @@ public class PublicacionController {
         return service.obtenerUsuariosUnidos(idPublicacion);
     }
 
+    @DeleteMapping("/salir/{idPublicacion}")
+    @PreAuthorize("isAuthenticated()")
+    public void salirPublicacion(@PathVariable Integer idPublicacion) {
+        service.salirPublicacion(idPublicacion);
+    }
+
 }
