@@ -112,7 +112,7 @@ public class PerfilService {
         if (dto.getGenero() != null) {
             perfil.setGenero(dto.getGenero());
         }
-        if (dto.getImagenUrl() != null) perfil.setImagenUrl(dto.getImagenUrl());
+        if (dto.getImagenUrlPerfil() != null) perfil.setImagenUrlPerfil(dto.getImagenUrlPerfil());
         if (dto.getBiografia() != null) perfil.setBiografia(dto.getBiografia());
 
         Perfil updatedPerfil = perfilRepository.save(perfil);

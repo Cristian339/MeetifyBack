@@ -3,20 +3,16 @@ package org.example.meetify.Services;
 import lombok.RequiredArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.Repositories.CompartirRepository;
-import org.example.meetify.Repositories.PerfilRepository;
-import org.example.meetify.Repositories.PublicacionRepository;
 import org.example.meetify.models.Compartir;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
 import org.example.meetify.models.Usuario;
 import org.example.meetify.seguridad.JWTFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,15 +39,17 @@ public class CompartirService {
 
         Publicacion publicacion = publicacionService.encontrarPublicacionPorId(publicacionId);
 
-
         if (!obtenerPublicacionesCompartidasPorPerfil().contains(publicacion)) {
             Compartir compartir = new Compartir();
             compartir.setPerfil(perfil);
             compartir.setPublicacion(publicacion);
             compartirRepository.save(compartir);
+
+            Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(publicacion.getUsuarioCreador().getCorreoElectronico());
             PublicacionDTO dto = new PublicacionDTO(publicacion.getUsuarioCreador().getNombreUsuario(),
-                    publicacion.getCategoria().getNombre(),publicacion.getImagenUrl(),publicacion.getTitulo(),
-                    publicacion.getDescripcion(),publicacion.getUbicacion(),publicacion.getFechaIni(),publicacion.getFechaFin());
+                    publicacion.getCategoria().getNombre(), publicacion.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
+                    publicacion.getTitulo(), publicacion.getDescripcion(), publicacion.getUbicacion(),
+                    publicacion.getFechaIni(), publicacion.getFechaFin());
             return dto;
         } else {
             throw new RuntimeException("Perfil o publicación no encontrados");
@@ -60,12 +58,11 @@ public class CompartirService {
 
     public List<Publicacion> obtenerPublicacionesCompartidasPorPerfil() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
-        System.out.println(correoAutenticado);
         Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
         return compartirRepository.findByPerfil_Id(perfil.getId())
                 .stream()
-                .map(compartir -> compartir.getPublicacion())
+                .map(Compartir::getPublicacion)
                 .collect(Collectors.toList());
     }
 
@@ -76,17 +73,11 @@ public class CompartirService {
         // Mapear cada Publicacion a PublicacionDTO
         List<PublicacionDTO> publicacionesDTO = new ArrayList<>();
         for (Publicacion publicacion : publicaciones) {
-            PublicacionDTO dto = new PublicacionDTO();
-
-            // Mapeo de los atributos de Publicacion a PublicacionDTO
-            dto.setNombrePerfil(publicacion.getUsuarioCreador().getNombreUsuario());  // Suponiendo que `getPerfil()` devuelve el perfil de la publicación
-            dto.setCategoria(publicacion.getCategoria().getNombre());
-            dto.setImageUrl(publicacion.getImagenUrl());
-            dto.setTitulo(publicacion.getTitulo());
-            dto.setDescripcion(publicacion.getDescripcion());
-            dto.setUbicacion(publicacion.getUbicacion());
-            dto.setFechaIni(publicacion.getFechaIni());
-            dto.setFechaFin(publicacion.getFechaFin());
+            Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(publicacion.getUsuarioCreador().getCorreoElectronico());
+            PublicacionDTO dto = new PublicacionDTO(publicacion.getUsuarioCreador().getNombreUsuario(),
+                    publicacion.getCategoria().getNombre(), publicacion.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
+                    publicacion.getTitulo(), publicacion.getDescripcion(), publicacion.getUbicacion(),
+                    publicacion.getFechaIni(), publicacion.getFechaFin());
 
             // Añadir el DTO a la lista
             publicacionesDTO.add(dto);
@@ -94,8 +85,4 @@ public class CompartirService {
 
         return publicacionesDTO;
     }
-
 }
-
-
-

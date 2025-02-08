@@ -3,11 +3,9 @@ package org.example.meetify.models;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.meetify.Enum.Genero;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Getter
 @Setter
@@ -59,17 +57,11 @@ public class Perfil {
     private Boolean baneado;
 
     @Column(name = "imagen_url", nullable = true)
-    private String imagenUrl;
+    private String imagenUrlPerfil;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, targetEntity = Perfil.class)
-    @JoinTable(
-            name = "seguidores" ,schema="meetify",
-            joinColumns = @JoinColumn(name = "seguidor_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "seguido_id", nullable = false)
-    )
-    private List<Perfil> seguidos = new ArrayList<>(0);
+    @OneToMany(mappedBy = "seguidor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seguidores> seguidos = new ArrayList<>();
 
-    // Relación inversa para obtener a los seguidores
-    @ManyToMany(mappedBy = "seguidos", fetch = FetchType.LAZY)
-    private List<Perfil> seguidores = new ArrayList<>();
+    @OneToMany(mappedBy = "seguido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seguidores> seguidores = new ArrayList<>();
 }

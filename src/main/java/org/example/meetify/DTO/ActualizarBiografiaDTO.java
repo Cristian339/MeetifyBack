@@ -9,6 +9,6 @@ import org.example.meetify.Enum.Genero;
 public class ActualizarBiografiaDTO {
     private String pais;
     private Genero genero;
-    private String imagenUrl;
+    private String imagenUrlPerfil;
     private String biografia;
 }

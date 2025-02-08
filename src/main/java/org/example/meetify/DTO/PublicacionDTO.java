@@ -1,9 +1,6 @@
 package org.example.meetify.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDate;
 
 @Data
@@ -13,7 +10,8 @@ public class PublicacionDTO {
 
     private String nombrePerfil;
     private String categoria;
-    private String imageUrl;
+    private String imageUrlPub;
+    private String imageUrlPerfil;
     private String titulo;
     private String descripcion;
     private String ubicacion;

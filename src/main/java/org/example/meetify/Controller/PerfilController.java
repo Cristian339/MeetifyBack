@@ -31,9 +31,9 @@ public class PerfilController {
         return perfilService.getPerfilDTOPorId(perfilLogueado.getId());
     }
 
-    @PostMapping("/actualizar-categorias")
-    public void cambiarCategorias(@RequestBody List<String> categorias) {
-        publicacionService.cambiarCategoriaPerfil(categorias);
+    @PostMapping("/actualizar-categorias/{correo}")
+    public void cambiarCategorias(@RequestBody List<String> categorias,@PathVariable String correo) {
+        publicacionService.cambiarCategoriaPerfil(categorias,correo);
     }
 
 
@@ -56,5 +56,6 @@ public class PerfilController {
 
         return perfilCategoriaService.obtenerCategoriasPorPerfil2();
     }
+
 
 }

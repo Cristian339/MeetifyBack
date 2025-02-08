@@ -20,7 +20,7 @@ public class PerfilDTO {
     private String biografia;
     private String pais;
     private LocalDate fechaNacimiento;
-    private String imagenUrl;
+    private String imagenUrlPerfil;
 
 
 }

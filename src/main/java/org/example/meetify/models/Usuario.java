@@ -6,7 +6,6 @@ import org.example.meetify.Enum.Rol;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.Collections;
 
@@ -36,6 +35,10 @@ public class Usuario implements UserDetails {
     @Column(name = "rol")
     @Enumerated(EnumType.ORDINAL)
     private Rol rol;
+
+    @ManyToOne
+    @JoinColumn(name = "perfil_id")
+    private Perfil perfil;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
