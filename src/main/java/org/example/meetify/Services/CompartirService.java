@@ -46,7 +46,7 @@ public class CompartirService {
             compartirRepository.save(compartir);
 
             Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(publicacion.getUsuarioCreador().getCorreoElectronico());
-            PublicacionDTO dto = new PublicacionDTO(publicacion.getUsuarioCreador().getNombreUsuario(),
+            PublicacionDTO dto = new PublicacionDTO(publicacion.getId(), publicacion.getUsuarioCreador().getNombreUsuario(),
                     publicacion.getCategoria().getNombre(), publicacion.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
                     publicacion.getTitulo(), publicacion.getDescripcion(), publicacion.getUbicacion(),
                     publicacion.getFechaIni(), publicacion.getFechaFin());
@@ -74,7 +74,7 @@ public class CompartirService {
         List<PublicacionDTO> publicacionesDTO = new ArrayList<>();
         for (Publicacion publicacion : publicaciones) {
             Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(publicacion.getUsuarioCreador().getCorreoElectronico());
-            PublicacionDTO dto = new PublicacionDTO(publicacion.getUsuarioCreador().getNombreUsuario(),
+            PublicacionDTO dto = new PublicacionDTO(publicacion.getId(), publicacion.getUsuarioCreador().getNombreUsuario(),
                     publicacion.getCategoria().getNombre(), publicacion.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
                     publicacion.getTitulo(), publicacion.getDescripcion(), publicacion.getUbicacion(),
                     publicacion.getFechaIni(), publicacion.getFechaFin());

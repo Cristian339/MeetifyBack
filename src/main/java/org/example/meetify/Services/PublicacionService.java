@@ -76,7 +76,7 @@ public class PublicacionService {
         List<PublicacionDTO> todas = new ArrayList<>();
         for (Publicacion d : publis) {
             Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(d.getUsuarioCreador().getCorreoElectronico());
-            todas.add(new PublicacionDTO(d.getUsuarioCreador().getNombreUsuario(),
+            todas.add(new PublicacionDTO(d.getId(), d.getUsuarioCreador().getNombreUsuario(),
                     d.getCategoria().getNombre(), d.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
                     d.getTitulo(), d.getDescripcion(), d.getUbicacion(), d.getFechaIni(), d.getFechaFin()));
         }
@@ -106,8 +106,7 @@ public class PublicacionService {
         publicacion.setTitulo(publicacionDTO.getTitulo());
         publicacion.setDescripcion(publicacionDTO.getDescripcion());
         publicacion.setUbicacion(publicacionDTO.getUbicacion());
-        publicacion.setImagenUrlPub(publicacionDTO.getImageUrlPub());
-        publicacion.setImagenUrlPerfil(publicacionDTO.getImageUrlPerfil());
+        publicacion.setImagenUrlPub(publicacionDTO.getImagenUrlPub());
         publicacion.setUsuarioCreador(usuario);
         publicacion.setFechaIni(publicacionDTO.getFechaIni());
         publicacion.setFechaFin(publicacionDTO.getFechaFin());
@@ -134,7 +133,7 @@ public class PublicacionService {
         publicacion.setTitulo(publicacionDTO.getTitulo());
         publicacion.setDescripcion(publicacionDTO.getDescripcion());
         publicacion.setUbicacion(publicacionDTO.getUbicacion());
-        publicacion.setImagenUrlPub(publicacionDTO.getImageUrlPub());
+        publicacion.setImagenUrlPub(publicacionDTO.getImagenUrlPub());
         publicacion.setFechaIni(publicacionDTO.getFechaIni());
         publicacion.setFechaFin(publicacionDTO.getFechaFin());
         repository.save(publicacion);
@@ -142,7 +141,7 @@ public class PublicacionService {
         return publicacionDTO;
     }
 
-    public String eliminarPublicacion(Integer id) {
+    public void eliminarPublicacion(Integer id) {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Publicacion publicacion = repository.findById(id)
@@ -153,7 +152,6 @@ public class PublicacionService {
         }
 
         repository.delete(publicacion);
-        return "Publicacion eliminada exitosamente";
     }
 
     // Metodo para unirse a una publicacion
@@ -240,7 +238,7 @@ public class PublicacionService {
             throw new SecurityException("No tienes permiso para ver esta publicacion");
         }
 
-        return new PublicacionDTO(publicacion.getUsuarioCreador().getNombreUsuario(),
+        return new PublicacionDTO(publicacion.getId(), publicacion.getUsuarioCreador().getNombreUsuario(),
                 publicacion.getCategoria().getNombre(), publicacion.getImagenUrlPub(), publicacion.getImagenUrlPerfil() ,publicacion.getTitulo(),
                 publicacion.getDescripcion(), publicacion.getUbicacion(), publicacion.getFechaIni(), publicacion.getFechaFin());
     }
@@ -254,7 +252,7 @@ public class PublicacionService {
 
         for (Publicacion p : publicaciones) {
             Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(p.getUsuarioCreador().getCorreoElectronico());
-            PublicacionDTO dto = new PublicacionDTO(p.getUsuarioCreador().getNombreUsuario(),
+            PublicacionDTO dto = new PublicacionDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
                     p.getCategoria().getNombre(), p.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
                     p.getTitulo(), p.getDescripcion(), p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
             publicacionDTOS.add(dto);

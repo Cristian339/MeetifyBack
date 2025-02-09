@@ -8,10 +8,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PublicacionDTO {
 
+    private Integer id;
     private String nombrePerfil;
     private String categoria;
-    private String imageUrlPub;
-    private String imageUrlPerfil;
+    private String imagenUrlPub;
+    private String imagenUrlPerfil;
     private String titulo;
     private String descripcion;
     private String ubicacion;
