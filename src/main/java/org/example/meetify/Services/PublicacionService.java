@@ -1,6 +1,7 @@
 package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
+import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.DTO.PublicacionIdDTO;
 import org.example.meetify.DTO.UsuarioDTO;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 
 @Service
 @AllArgsConstructor
@@ -43,6 +47,7 @@ public class PublicacionService {
         List<Publicacion> publicaciones = repository.findAll();
         List<PublicacionIdDTO> publicacionDTOS = new ArrayList<>();
 
+
         Usuario us = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(us.getCorreoElectronico());
         List<Categoria> categorias = perfilCategoriaService.obtenerCategoriasPorPerfil(perfil);
@@ -61,14 +66,16 @@ public class PublicacionService {
         }
 
         return publicacionDTOS;
+
     }
 
     public Publicacion encontrarPublicacionPorId(Integer id) {
         return repository.findById(id).orElse(null);
     }
 
-    public List<PublicacionDTO> getSeguidos() {
+    public List<PublicacionDTO> getSeguidos(){
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        System.out.println(correoAutenticado);
         Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
 
@@ -81,25 +88,33 @@ public class PublicacionService {
                     d.getTitulo(), d.getDescripcion(), d.getUbicacion(), d.getFechaIni(), d.getFechaFin()));
         }
 
+
+
+
         List<PublicacionDTO> publicaciones = new ArrayList<>();
-        for (PublicacionDTO p : todas) {
+
+
+
+
+        for (PublicacionDTO p : todas){
             Usuario us = usuarioService.obtenerUsuarioPorNombre(p.getNombrePerfil());
             Perfil perfilPubli = perfilService.obtenerPerfilPorCorreo(us.getCorreoElectronico());
 
-            if (perfil.getSeguidos().contains(perfilPubli)) {
+            if(perfil.getSeguidos().contains(perfilPubli)){
                 publicaciones.add(p);
             }
         }
         return publicaciones;
     }
 
-    public PublicacionDTO aniadirPublicacion(PublicacionDTO publicacionDTO) {
+
+    public PublicacionDTO aniadirPublicacion(PublicacionDTO publicacionDTO){
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Publicacion publicacion = new Publicacion();
         Categoria categoria = categoriaRepository.findByNombre(publicacionDTO.getCategoria());
 
-        if (categoria == null) {
+        if(categoria == null){
             throw new IllegalArgumentException("Categoria no encontrada" + publicacionDTO.getCategoria());
         }
         publicacion.setCategoria(categoria);
@@ -112,6 +127,7 @@ public class PublicacionService {
         publicacion.setFechaFin(publicacionDTO.getFechaFin());
         repository.save(publicacion);
         return publicacionDTO;
+
     }
 
     public PublicacionDTO actualizarPublicacion(Integer id, PublicacionDTO publicacionDTO) {
@@ -261,6 +277,7 @@ public class PublicacionService {
         return publicacionDTOS;
     }
 
+
     public List<PublicacionIdDTO> publicacionesPerfil(String correo) {
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(correo);
 
@@ -268,8 +285,8 @@ public class PublicacionService {
         List<PublicacionIdDTO> publicacionDTOS = new ArrayList<>();
 
         for (Publicacion p : publicaciones) {
-            if (p.getUsuarioCreador().getCorreoElectronico().equals(perfil.getCorreoElectronico())) {
-                PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
+            if(Objects.equals(p.getUsuarioCreador().getCorreoElectronico(), perfil.getCorreoElectronico())){
+                PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(),p.getUsuarioCreador().getNombreUsuario(),
                         p.getCategoria().getNombre(), p.getImagenUrlPub(), p.getTitulo(), p.getDescripcion(),
                         p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
                 publicacionDTOS.add(dto);
@@ -279,13 +296,23 @@ public class PublicacionService {
         return publicacionDTOS;
     }
 
-    public void cambiarCategoriaPerfil(List<String> categorias, String correo) {
-        Perfil perfil = perfilService.obtenerPerfilPorCorreo(correo);
-        for (String c : categorias) {
+
+
+
+
+
+    public void cambiarCategoriaPerfil(List<String> categorias, String correo){
+        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        System.out.println(correoAutenticado);
+        Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
+        for(String c : categorias){
             Categoria cat = categoriaRepository.findByNombre(c);
-            if (cat != null) {
-                perfilCategoriaService.anadirCategoriaAPerfil(perfil, cat);
+            if (cat != null){
+                perfilCategoriaService.anadirCategoriaAPerfil(perfil,cat);
             }
         }
     }
+
+
 }

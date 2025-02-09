@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.DTO.PublicacionIdDTO;
 import org.example.meetify.DTO.PuntuacionDTO;
+import org.example.meetify.Repositories.PublicacionRepository;
 import org.example.meetify.DTO.UsuarioDTO;
 import org.example.meetify.Services.CompartirService;
 import org.example.meetify.Services.PublicacionService;
@@ -26,6 +27,8 @@ public class PublicacionController {
 
     private PuntuacionService puntuacionService;
 
+    private PublicacionRepository repository;
+
     @GetMapping("/all")
     public List<PublicacionIdDTO> general(){
         return service.getAll();
@@ -46,6 +49,11 @@ public class PublicacionController {
     @GetMapping("all/mi")
     public List<PublicacionDTO> getMyPublications(){
         return service.verMisPublicaciones();
+    }
+
+    @PostMapping("del/{idPub}")
+    public void eliminarPublicacion2(@PathVariable Integer idPub) {
+        repository.deleteById(idPub);
     }
 
     @DeleteMapping("/{idPub}")
