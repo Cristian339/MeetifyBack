@@ -31,7 +31,7 @@ public class SeguidoresService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nadie te sigue"));
 
         return perfil.getSeguidores().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR))
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR, perfil.getImagenUrlPerfil()))
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +42,7 @@ public class SeguidoresService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No sigues a nadie"));
 
         return perfil.getSeguidos().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO))
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO, perfil.getImagenUrlPerfil()))
                 .collect(Collectors.toList());
     }
 
@@ -53,11 +53,11 @@ public class SeguidoresService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil no encontrado"));
 
         List<SeguidorDTO> seguidores = perfil.getSeguidores().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR))
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR, perfil.getImagenUrlPerfil()))
                 .toList();
 
         List<SeguidorDTO> seguidos = perfil.getSeguidos().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO))
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO, perfil.getImagenUrlPerfil()))
                 .toList();
 
         return seguidores.stream()

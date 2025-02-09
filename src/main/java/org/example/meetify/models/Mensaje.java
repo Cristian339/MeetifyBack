@@ -25,11 +25,11 @@ public class Mensaje {
 
     @ManyToOne
     @JoinColumn(name = "usuario_emisor_id", nullable = false)
-    private Usuario usuarioEmisor;
+    private Perfil emisor;
 
     @ManyToOne
     @JoinColumn(name = "usuario_receptor_id", nullable = false)
-    private Usuario usuarioReceptor;
+    private Perfil receptor;
 
     @Column(name = "fecha_enviado")
     private LocalDate fechaEnviado;
@@ -38,5 +38,5 @@ public class Mensaje {
     private LocalTime horaEnviado;
 
     @Column(name = "room_id", nullable = false)
-    private Integer roomId;
+    private String roomId;
 }

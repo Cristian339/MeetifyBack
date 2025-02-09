@@ -1,17 +1,14 @@
 package org.example.meetify.Controller;
 
-import lombok.AllArgsConstructor;
-import org.example.meetify.models.Greeting;
-import org.example.meetify.models.HelloMessage;
-import org.example.meetify.models.Mensaje;
 import org.example.meetify.Services.MensajeService;
+import org.example.meetify.models.Mensaje;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.util.HtmlUtils;
+
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
@@ -21,10 +18,10 @@ public class MensajeController {
 
     private final MensajeService mensajeService;
 
-    @MessageMapping("/enviarMensaje/{roomId}")
-    @SendTo("/topic/mensajes/{roomId}")
-    public Mensaje enviarMensaje(@DestinationVariable String roomId, Mensaje mensaje) throws Exception {
-        return mensajeService.guardarMensaje(roomId, mensaje);
+    @MessageMapping("/enviarMensaje")
+    @SendTo("/topic/mensajes")
+    public Mensaje enviarMensaje(Mensaje mensaje) throws Exception {
+        return mensajeService.guardarMensaje(mensaje);
     }
 
     @GetMapping("/mensajes/{roomId}")
@@ -32,7 +29,6 @@ public class MensajeController {
         return mensajeService.obtenerMensajesPorRoomId(roomId);
     }
 }
-
 
 
 /*
