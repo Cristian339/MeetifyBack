@@ -12,6 +12,8 @@ import org.example.meetify.Repositories.SeguidoresRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Seguidores;
 import org.example.meetify.models.Usuario;
+import org.example.meetify.seguridad.JWTFilter;
+import org.example.meetify.seguridad.JWTService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -176,6 +178,22 @@ public class PerfilService {
         List<Seguidores> seg = perfil.getSeguidores();
         seguidoresRepository.deleteAll(perfil.getSeguidores());
         perfilRepository.delete(perfil);
+    }
+
+    public PerfilDTO actualizarPerfil(Integer id, PerfilDTO perfilDTO) {
+        Perfil perfil = perfilRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Perfil no encontrado con id: " + id));
+
+        perfil.setNombre(perfilDTO.getNombre());
+        perfil.setApellidos(perfilDTO.getApellidos());
+        perfil.setCorreoElectronico(perfilDTO.getCorreoElectronico());
+        perfil.setGenero(perfilDTO.getGenero());
+        perfil.setBiografia(perfilDTO.getBiografia());
+        perfil.setPais(perfilDTO.getPais());
+        perfil.setImagenUrlPerfil(perfilDTO.getImagenUrlPerfil());
+
+        Perfil updatedPerfil = perfilRepository.save(perfil);
+        return perfilMapper.toDTO(updatedPerfil);
     }
 }
 

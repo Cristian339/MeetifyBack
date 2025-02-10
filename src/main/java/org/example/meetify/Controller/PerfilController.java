@@ -13,6 +13,7 @@ import org.example.meetify.models.PerfilCategoria;
 import org.example.meetify.models.Usuario;
 import org.example.meetify.seguridad.JWTFilter;
 import org.example.meetify.seguridad.JWTService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -75,11 +76,12 @@ public class PerfilController {
         }else {
             throw new RuntimeException("Contraseña incorrecta");
         }
-
     }
 
-
-
-
-
+    @PutMapping("/actualizar")
+    public ResponseEntity<PerfilDTO> actualizarPerfil(@RequestBody PerfilDTO perfilDTO, @RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        PerfilDTO updatedPerfil = perfilService.actualizarPerfil(perfilLogueado.getId(), perfilDTO);
+        return ResponseEntity.ok(updatedPerfil);
+    }
 }
