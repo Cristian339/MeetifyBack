@@ -8,6 +8,7 @@ import org.example.meetify.Enum.Rol;
 import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Usuario;
+import org.example.meetify.seguridad.JWTFilter;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,16 +33,26 @@ public class UsuarioService implements UserDetailsService {
     private final PasswordEncoder codificadorContrasenia;
 
 
+
+
     public Usuario obtenerUsuarioPorNombre(String nombreUsuario) {
         Optional<Usuario> usuario = usuarioRepository.findTopByNombreUsuario(nombreUsuario);
         return usuario.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ese nombre de usuario"));
     }
 
-    public Usuario obtenerUsuarioPorCorro(String correo) {
+    public Usuario obtenerUsuarioPorCorreo(String correo) {
         Optional<Usuario> usuario = usuarioRepository.findTopByCorreoElectronico(correo);
         return usuario.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ese nombre de usuario"));
     }
 
+
+    public boolean autentificarse(String contrasenia, Usuario usuario){
+        if(codificadorContrasenia.matches(contrasenia,usuario.getPassword())){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     @Override
     public UserDetails loadUserByUsername(String nombreUsuario) throws UsernameNotFoundException {

@@ -297,20 +297,24 @@ public class PublicacionService {
     }
 
 
-
-
-
-
     public void cambiarCategoriaPerfil(List<String> categorias, String correo){
-        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
-        System.out.println(correoAutenticado);
-        Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
-        Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
+        Perfil perfil = perfilService.obtenerPerfilPorCorreo(correo);
         for(String c : categorias){
             Categoria cat = categoriaRepository.findByNombre(c);
             if (cat != null){
                 perfilCategoriaService.anadirCategoriaAPerfil(perfil,cat);
             }
+        }
+    }
+
+
+    public void eliminarTodasLasPublicacionesPorPerfil(Perfil perfil) {
+        // Obtiene todas las publicaciones asociadas con el perfil
+        List<Publicacion> publicaciones = repository.findByUsuarioCreador(perfil.getUsuario());
+
+        // Si hay publicaciones, las elimina
+        if (!publicaciones.isEmpty()) {
+            repository.deleteAll(publicaciones);
         }
     }
 

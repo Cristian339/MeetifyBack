@@ -8,7 +8,9 @@ import org.example.meetify.Enum.Rol;
 import org.example.meetify.Mappers.PerfilMapper;
 import org.example.meetify.Repositories.CategoriaRepository;
 import org.example.meetify.Repositories.PerfilRepository;
+import org.example.meetify.Repositories.SeguidoresRepository;
 import org.example.meetify.models.Perfil;
+import org.example.meetify.models.Seguidores;
 import org.example.meetify.models.Usuario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,8 @@ public class PerfilService {
     private PerfilRepository perfilRepository;
 
     private PerfilMapper perfilMapper;
+
+    private SeguidoresRepository seguidoresRepository;
 
     public Perfil guardarPerfil(Perfil perfil){
         return perfilRepository.save(perfil);
@@ -165,6 +169,13 @@ public class PerfilService {
         }
 
         perfilRepository.save(perfil);
+    }
+
+
+    public void eliminarPerfil(Perfil perfil){
+        List<Seguidores> seg = perfil.getSeguidores();
+        seguidoresRepository.deleteAll(perfil.getSeguidores());
+        perfilRepository.delete(perfil);
     }
 }
 

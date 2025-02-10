@@ -29,7 +29,7 @@ public class AdminController {
     public List<PerfilDTO> obtenerPerfilesBaneados() {
         List<PerfilDTO> perfiles = perfilService.listaDeBaneados();
         for (PerfilDTO p : perfiles){
-            Usuario us = usuarioService.obtenerUsuarioPorCorro(p.getCorreoElectronico());
+            Usuario us = usuarioService.obtenerUsuarioPorCorreo(p.getCorreoElectronico());
             p.setNombreUsuario(us.getNombreUsuario());
         }
         return perfiles;
@@ -39,7 +39,7 @@ public class AdminController {
     public List<PerfilDTO> obtenerPerfilesNoBaneados() {
         List<PerfilDTO> perfiles = perfilService.listaDeNoBaneados();
         for (PerfilDTO p : perfiles){
-            Usuario us = usuarioService.obtenerUsuarioPorCorro(p.getCorreoElectronico());
+            Usuario us = usuarioService.obtenerUsuarioPorCorreo(p.getCorreoElectronico());
             p.setNombreUsuario(us.getNombreUsuario());
         }
         return perfiles;

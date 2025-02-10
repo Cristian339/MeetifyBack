@@ -85,4 +85,15 @@ public class CompartirService {
 
         return publicacionesDTO;
     }
+
+    public void eliminarTodasLasPublicacionesCompartidasPorPerfil(Perfil perfil) {
+        // Obtenemos todas las publicaciones compartidas por este perfil
+        List<Compartir> publicacionesCompartidas = compartirRepository.findByPerfil_Id(perfil.getId());
+
+        // Si hay publicaciones compartidas, las eliminamos
+        if (!publicacionesCompartidas.isEmpty()) {
+            compartirRepository.deleteAll(publicacionesCompartidas);
+        }
+    }
+
 }

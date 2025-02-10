@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.CategoriaDTO;
 import org.example.meetify.DTO.PerfilDTO;
 import org.example.meetify.DTO.PublicacionDTO;
+import org.example.meetify.Repositories.PerfilRepository;
+import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.Services.*;
 import org.example.meetify.models.Categoria;
 import org.example.meetify.models.Perfil;
@@ -19,11 +21,14 @@ import java.util.List;
 @RequestMapping("/publicacion/perfil")
 @AllArgsConstructor
 public class PerfilController {
+    private final PerfilRepository perfilRepository;
     private PerfilService perfilService;
     private JWTService jwtService;
     private PublicacionService publicacionService;
     private CompartirService compartirService;
     private PerfilCategoriaService perfilCategoriaService;
+    private UsuarioService usuarioService;
+    private UsuarioRepository usuarioRepository;
 
     @GetMapping("/mi")
     public PerfilDTO obtenerMiPerfil(@RequestHeader("Authorization") String token) {
@@ -56,6 +61,25 @@ public class PerfilController {
 
         return perfilCategoriaService.obtenerCategoriasPorPerfil2();
     }
+
+    @PostMapping("/eliminar/{contrasenia}")
+    public void eliminarCuenta(@PathVariable String contrasenia,@RequestHeader("Authorization") String token){
+        Perfil perfil = jwtService.extraerPerfilToken(token);
+        Usuario usuario = usuarioService.obtenerUsuarioPorCorreo(perfil.getCorreoElectronico());
+        if(usuarioService.autentificarse(contrasenia,usuario)){
+            compartirService.eliminarTodasLasPublicacionesCompartidasPorPerfil(perfil);
+            perfilCategoriaService.eliminarTodasLasCategoriasPorPerfil(perfil);
+            publicacionService.eliminarTodasLasPublicacionesPorPerfil(perfil);
+            perfilService.eliminarPerfil(perfil);
+            usuarioRepository.delete(usuario);
+        }else {
+            throw new RuntimeException("Contraseña incorrecta");
+        }
+
+    }
+
+
+
 
 
 }

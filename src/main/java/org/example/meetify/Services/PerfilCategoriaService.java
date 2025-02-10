@@ -72,5 +72,16 @@ public class PerfilCategoriaService {
         return repository.save(perfilCategoria);
     }
 
+    public void eliminarTodasLasCategoriasPorPerfil(Perfil perfil) {
+        // Obtenemos todas las categorías asociadas con este perfil
+        List<PerfilCategoria> categoriasPerfil = repository.findByPerfil(perfil);
+
+        // Si existen categorías asociadas, las eliminamos
+        if (!categoriasPerfil.isEmpty()) {
+            repository.deleteAll(categoriasPerfil);
+        }
+    }
+
+
 
 }
