@@ -49,12 +49,12 @@ public class MensajeController {
         return compartirService.compartirPublicacion(id,perfil);
     }
 */
-
+/*
     @PostMapping("/crear-conversacion")
     public Conversacion crearConversacion(@RequestHeader("Authorization") String token, @RequestParam Integer usuario2Id) {
         Perfil miUsuario = jwtService.extraerPerfilToken(token);
         return mensajeService.crearConversacion(miUsuario.getId(), usuario2Id);
-    }
+    }*/
 
 
 

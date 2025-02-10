@@ -104,14 +104,14 @@ public class MensajeService {
         return mensajeRepository.save(mensaje);
     }
 
-    public Conversacion crearConversacion(Integer usuario1Id, Integer usuario2Id) {
+   /* public Conversacion crearConversacion(Integer usuario1Id, Integer usuario2Id) {
         Perfil usuario1 = perfilService.getById(usuario1Id);
         Perfil usuario2 = perfilService.getById(usuario2Id);
         Conversacion conversacion = new Conversacion();
         conversacion.setUsuario1(usuario1);
         conversacion.setUsuario2(usuario2);
         return conversacionRepository.save(conversacion);
-    }
+    }*/
 
     public Mensaje editarMensaje(Integer mensajeId, Mensaje mensajeActualizado) {
         Mensaje mensajeExistente = mensajeRepository.findById(mensajeId)

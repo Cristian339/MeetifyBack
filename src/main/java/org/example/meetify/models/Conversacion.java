@@ -21,12 +21,8 @@ public class Conversacion {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "usuario1_id", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Perfil usuario1;
-
-    @ManyToOne
-    @JoinColumn(name = "usuario2_id", nullable = false)
-    private Perfil usuario2;
 
     @OneToMany(mappedBy = "conversacion")
     private List<Mensaje> mensajes;
