@@ -3,8 +3,11 @@ package org.example.meetify.Services;
 import org.example.meetify.Controller.EnviarMensajeDTO;
 import org.example.meetify.DTO.*;
 import org.example.meetify.Repositories.MensajeRepository;
+import org.example.meetify.Repositories.ConversacionRepository;
 import org.example.meetify.models.Mensaje;
+import org.example.meetify.models.Conversacion;
 import org.example.meetify.models.Perfil;
+import org.example.meetify.seguridad.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import java.util.List;
 public class MensajeService {
 
     private final MensajeRepository mensajeRepository;
+    private final ConversacionRepository conversacionRepository;
     private final PerfilService perfilService;
     private final SimpMessagingTemplate messagingTemplate;
 
@@ -68,13 +72,16 @@ public class MensajeService {
     }
 
     public RespuestaDTO enviarMensaje(Perfil perfil, EnviarMensajeDTO enviarMensajeDTO) {
+        Conversacion conversacion = conversacionRepository.findById(enviarMensajeDTO.getConversacionId())
+                .orElseThrow(() -> new IllegalArgumentException("Conversacion no encontrada"));
+
         Mensaje mensaje = new Mensaje();
         mensaje.setFechaEnviado(LocalDate.now());
         mensaje.setHoraEnviado(LocalTime.now());
         mensaje.setEmisor(perfil);
         mensaje.setReceptor(perfilService.getById(enviarMensajeDTO.getIdReceptor()));
         mensaje.setContenido(enviarMensajeDTO.getTexto());
-        mensaje.setRoomId(generateRoomId(perfil.getId(), enviarMensajeDTO.getIdReceptor()));
+        mensaje.setConversacion(conversacion);
 
         Mensaje savedMensaje = mensajeRepository.save(mensaje);
         messagingTemplate.convertAndSend("/topic/mensajes", savedMensaje);
@@ -83,11 +90,27 @@ public class MensajeService {
     }
 
     public Mensaje guardarMensaje(Mensaje mensaje) {
-        String roomId = generateRoomId(mensaje.getEmisor().getId(), mensaje.getReceptor().getId());
-        mensaje.setRoomId(roomId);
+        if (mensaje.getEmisor() == null) {
+            throw new IllegalArgumentException("El emisor del mensaje no puede ser nulo");
+        }
+        if (mensaje.getReceptor() == null) {
+            throw new IllegalArgumentException("El receptor del mensaje no puede ser nulo");
+        }
+        if (mensaje.getConversacion() == null) {
+            throw new IllegalArgumentException("La conversacion no puede ser nula");
+        }
         mensaje.setFechaEnviado(LocalDate.now());
         mensaje.setHoraEnviado(LocalTime.now());
         return mensajeRepository.save(mensaje);
+    }
+
+    public Conversacion crearConversacion(Integer usuario1Id, Integer usuario2Id) {
+        Perfil usuario1 = perfilService.getById(usuario1Id);
+        Perfil usuario2 = perfilService.getById(usuario2Id);
+        Conversacion conversacion = new Conversacion();
+        conversacion.setUsuario1(usuario1);
+        conversacion.setUsuario2(usuario2);
+        return conversacionRepository.save(conversacion);
     }
 
     public Mensaje editarMensaje(Integer mensajeId, Mensaje mensajeActualizado) {
@@ -99,18 +122,17 @@ public class MensajeService {
         return mensajeRepository.save(mensajeExistente);
     }
 
-    private String generateRoomId(Integer emisorId, Integer receptorId) {
-        long timestamp = System.currentTimeMillis();
-        return emisorId < receptorId ? emisorId + "_" + receptorId + "_" + timestamp : receptorId + "_" + emisorId + "_" + timestamp;
-    }
-
     public void eliminarMensaje(Integer mensajeId) {
         Mensaje mensajeExistente = mensajeRepository.findById(mensajeId)
                 .orElseThrow(() -> new IllegalArgumentException("Mensaje no encontrado"));
         mensajeRepository.delete(mensajeExistente);
     }
 
-    public List<Mensaje> obtenerMensajesPorRoomId(String roomId) {
-        return mensajeRepository.findByRoomId(roomId);
+    public List<Mensaje> obtenerMensajesPorConversacionId(Integer conversacionId) {
+        Conversacion conversacion = conversacionRepository.findById(conversacionId)
+                .orElseThrow(() -> new IllegalArgumentException("Conversacion no encontrada"));
+        return mensajeRepository.findByConversacion(conversacion);
     }
+
+
 }

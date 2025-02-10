@@ -1,13 +1,14 @@
 package org.example.meetify.Repositories;
 
 import org.example.meetify.models.Mensaje;
+import org.example.meetify.models.Conversacion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
-    List<Mensaje> findByRoomId(String roomId);
+    List<Mensaje> findByConversacion(Conversacion conversacion);
 
     @Query(value = "select distinct(u.usuario_id) from meetify.mensaje m " +
             "join meetify.usuario u on (m.usuario_emisor_id = u.usuario_id and m.usuario_receptor_id = :id ) " +

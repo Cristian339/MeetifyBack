@@ -1,13 +1,12 @@
 package org.example.meetify.Controller;
 
-import org.example.meetify.DTO.ChatDBDTO;
-import org.example.meetify.DTO.ConversacionDTO;
-import org.example.meetify.DTO.MensajeDTO;
-import org.example.meetify.DTO.RespuestaDTO;
+import org.example.meetify.DTO.*;
 import org.example.meetify.Services.MensajeService;
 import org.example.meetify.Services.PerfilService;
+import org.example.meetify.models.Conversacion;
 import org.example.meetify.models.Mensaje;
 import org.example.meetify.models.Perfil;
+import org.example.meetify.seguridad.JWTService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +16,14 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/mensajes")
+@RequestMapping("/chat")
 @AllArgsConstructor
 public class MensajeController {
 
     private final MensajeService mensajeService;
     private final PerfilService perfilService;
+    private final JWTService jwtService;
+
 
     @MessageMapping("/enviarMensaje")
     @SendTo("/topic/mensajes")
@@ -30,15 +31,32 @@ public class MensajeController {
         return mensajeService.guardarMensaje(mensaje);
     }
 
-    @GetMapping("/room/{roomId}")
-    public List<Mensaje> obtenerMensajesPorRoomId(@PathVariable String roomId) {
-        return mensajeService.obtenerMensajesPorRoomId(roomId);
-    }
-
     @GetMapping("/conversaciones/{idPerfil}")
     public List<ConversacionDTO> getConversacionesByIdPerfil(@PathVariable Integer idPerfil) {
         return mensajeService.getConverdacionesByIdPerfil(idPerfil);
     }
+
+    @GetMapping("/conversacion/{conversacionId}")
+    public List<Mensaje> obtenerMensajesPorConversacionId(@PathVariable Integer conversacionId) {
+        return mensajeService.obtenerMensajesPorConversacionId(conversacionId);
+    }
+
+/*
+    @PostMapping("/compartir/{id}")
+    public PublicacionDTO compartirPublicacion(@PathVariable Integer id, @RequestHeader("Authorization") String token) {
+        Perfil perfil = jwtService.extraerPerfilToken(token);
+        System.out.println(perfil.getCorreoElectronico());
+        return compartirService.compartirPublicacion(id,perfil);
+    }
+*/
+
+    @PostMapping("/crear-conversacion")
+    public Conversacion crearConversacion(@RequestHeader("Authorization") String token, @RequestParam Integer usuario2Id) {
+        Perfil miUsuario = jwtService.extraerPerfilToken(token);
+        return mensajeService.crearConversacion(miUsuario.getId(), usuario2Id);
+    }
+
+
 
     @GetMapping("/conversaciones")
     public List<ChatDBDTO> getConversaciones(@RequestParam Integer idPerfil) {
@@ -67,17 +85,3 @@ public class MensajeController {
         mensajeService.eliminarMensaje(mensajeId);
     }
 }
-
-
-/*
-    @MessageMapping("/enviarMensaje")
-    @SendTo("/topic/mensajes")
-    public Mensaje enviarMensaje(Mensaje mensaje) throws Exception {
-        return mensajeService.guardarMensaje(mensaje);
-    }
-
-    @GetMapping("/mensajes/{roomId}")
-    public List<Mensaje> obtenerMensajesPorRoomId(@PathVariable String roomId) {
-        return mensajeService.obtenerMensajesPorRoomId(roomId);
-    }
-}*/
