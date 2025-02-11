@@ -84,4 +84,37 @@ public class PerfilController {
         PerfilDTO updatedPerfil = perfilService.actualizarPerfil(perfilLogueado.getId(), perfilDTO);
         return ResponseEntity.ok(updatedPerfil);
     }
+
+    @PostMapping("/anadir-categoria")
+    public ResponseEntity<String> anadirCategoriaExistenteAPerfil(@RequestBody CategoriaDTO categoriaDTO, @RequestHeader("Authorization") String token) {
+        try {
+            Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+            perfilCategoriaService.anadirCategoriaExistenteAPerfil(perfilLogueado, categoriaDTO);
+            return ResponseEntity.ok("Categoría añadida exitosamente.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/eliminar")
+    public ResponseEntity<String> eliminarCategoriaPreferenteDePerfil(@RequestBody CategoriaDTO categoriaDTO, @RequestHeader("Authorization") String token) {
+        try {
+            Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+            perfilCategoriaService.eliminarCategoriaPreferenteDePerfil(perfilLogueado, categoriaDTO);
+            return ResponseEntity.ok("Categoría eliminada exitosamente.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/todas")
+    public List<CategoriaDTO> verTodasLasCategorias() {
+        return perfilCategoriaService.verTodasLasCategorias();
+    }
+
+    @GetMapping("/elegidas")
+    public List<CategoriaDTO> verCategoriasElegidasPorPerfil(@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return perfilCategoriaService.verCategoriasElegidasPorPerfil(perfilLogueado);
+    }
 }

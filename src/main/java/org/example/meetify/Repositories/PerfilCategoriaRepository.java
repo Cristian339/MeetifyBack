@@ -10,4 +10,5 @@ import java.util.List;
 public interface PerfilCategoriaRepository extends JpaRepository<PerfilCategoria, Integer> {
     List<PerfilCategoria> findByPerfil(Perfil perfil);
     List<PerfilCategoria> findByCategoria(Categoria categoria);
+    void delete(PerfilCategoria perfilCategoria);
 }
