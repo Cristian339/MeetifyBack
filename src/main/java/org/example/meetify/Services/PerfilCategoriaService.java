@@ -1,6 +1,7 @@
 package org.example.meetify.Services;
 
 import org.example.meetify.DTO.CategoriaDTO;
+import org.example.meetify.Repositories.CategoriaRepository;
 import org.example.meetify.Repositories.PerfilCategoriaRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Categoria;
@@ -27,6 +28,8 @@ public class PerfilCategoriaService {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     public List<Categoria> obtenerCategoriasPorPerfil(Perfil perfil) {
         List<PerfilCategoria> usuarioCategorias = repository.findByPerfil(perfil);
@@ -82,6 +85,52 @@ public class PerfilCategoriaService {
         }
     }
 
+    public PerfilCategoria anadirCategoriaExistenteAPerfil(Perfil perfil, CategoriaDTO categoriaDTO) {
+        Categoria categoria = categoriaRepository.findByNombre(categoriaDTO.getNombre());
+        if (categoria == null) {
+            throw new IllegalArgumentException("Categoría no encontrada.");
+        }
 
+        return anadirCategoriaAPerfil(perfil, categoria);
+    }
+
+    public void eliminarCategoriaPreferenteDePerfil(Perfil perfil, CategoriaDTO categoriaDTO) {
+        Categoria categoria = categoriaRepository.findByNombre(categoriaDTO.getNombre());
+        if (categoria == null) {
+            throw new IllegalArgumentException("Categoría no encontrada.");
+        }
+
+        List<PerfilCategoria> existingRelations = repository.findByPerfil(perfil);
+        PerfilCategoria perfilCategoria = existingRelations.stream()
+                .filter(pc -> pc.getCategoria().equals(categoria))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("El perfil no tiene esta categoría."));
+
+        repository.delete(perfilCategoria);
+    }
+
+    public List<CategoriaDTO> verTodasLasCategorias() {
+        List<Categoria> categorias = categoriaRepository.findAll();
+        return categorias.stream()
+                .map(categoria -> {
+                    CategoriaDTO dto = new CategoriaDTO();
+                    dto.setId(categoria.getId());
+                    dto.setNombre(categoria.getNombre());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<CategoriaDTO> verCategoriasElegidasPorPerfil(Perfil perfil) {
+        List<PerfilCategoria> perfilCategorias = repository.findByPerfil(perfil);
+        return perfilCategorias.stream()
+                .map(pc -> {
+                    CategoriaDTO dto = new CategoriaDTO();
+                    dto.setId(pc.getCategoria().getId());
+                    dto.setNombre(pc.getCategoria().getNombre());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 
 }
