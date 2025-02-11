@@ -56,7 +56,6 @@ public class PublicacionService {
             // Filtra las publicaciones para excluir las del usuario autenticado
             if (!p.getUsuarioCreador().getCorreoElectronico().equals(perfil.getCorreoElectronico())) {
                 if (categorias.contains(p.getCategoria())) {
-                    Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(p.getUsuarioCreador().getCorreoElectronico());
                     PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
                             p.getCategoria().getNombre(), p.getImagenUrlPub(), p.getTitulo(), p.getDescripcion(),
                             p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
