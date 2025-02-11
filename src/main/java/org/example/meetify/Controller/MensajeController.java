@@ -1,87 +1,59 @@
 package org.example.meetify.Controller;
 
-import org.example.meetify.DTO.*;
-import org.example.meetify.Services.MensajeService;
-import org.example.meetify.Services.PerfilService;
-import org.example.meetify.models.Conversacion;
+import lombok.AllArgsConstructor;
 import org.example.meetify.models.Mensaje;
-import org.example.meetify.models.Perfil;
-import org.example.meetify.seguridad.JWTService;
+import org.example.meetify.Services.MensajeService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.*;
-
-import lombok.AllArgsConstructor;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/chat")
+@Controller
 @AllArgsConstructor
 public class MensajeController {
 
     private final MensajeService mensajeService;
-    private final PerfilService perfilService;
-    private final JWTService jwtService;
 
-
-    @MessageMapping("/enviarMensaje")
-    @SendTo("/topic/mensajes")
-    public Mensaje enviarMensaje(Mensaje mensaje) throws Exception {
-        return mensajeService.guardarMensaje(mensaje);
+    @MessageMapping("/enviarMensaje/{roomId}")
+    @SendTo("/topic/mensajes/{roomId}")
+    public Mensaje enviarMensaje(@DestinationVariable String roomId, Mensaje mensaje) throws Exception {
+        return mensajeService.guardarMensaje(roomId, mensaje);
     }
 
-    @GetMapping("/conversaciones/{idPerfil}")
-    public List<ConversacionDTO> getConversacionesByIdPerfil(@PathVariable Integer idPerfil) {
-        return mensajeService.getConverdacionesByIdPerfil(idPerfil);
-    }
-
-    @GetMapping("/conversacion/{conversacionId}")
-    public List<Mensaje> obtenerMensajesPorConversacionId(@PathVariable Integer conversacionId) {
-        return mensajeService.obtenerMensajesPorConversacionId(conversacionId);
-    }
-
-/*
-    @PostMapping("/compartir/{id}")
-    public PublicacionDTO compartirPublicacion(@PathVariable Integer id, @RequestHeader("Authorization") String token) {
-        Perfil perfil = jwtService.extraerPerfilToken(token);
-        System.out.println(perfil.getCorreoElectronico());
-        return compartirService.compartirPublicacion(id,perfil);
-    }
-*/
-/*
-    @PostMapping("/crear-conversacion")
-    public Conversacion crearConversacion(@RequestHeader("Authorization") String token, @RequestParam Integer usuario2Id) {
-        Perfil miUsuario = jwtService.extraerPerfilToken(token);
-        return mensajeService.crearConversacion(miUsuario.getId(), usuario2Id);
-    }*/
-
-
-
-    @GetMapping("/conversaciones")
-    public List<ChatDBDTO> getConversaciones(@RequestParam Integer idPerfil) {
-        Perfil perfil = perfilService.getById(idPerfil);
-        return mensajeService.getConversaciones(perfil);
-    }
-
-    @GetMapping("/emisor-receptor")
-    public List<MensajeDTO> getByEmisorReceptor(@RequestParam Integer idPerfil1, @RequestParam Integer idPerfil2) {
-        return mensajeService.getByEmisorReceptor(idPerfil1, idPerfil2);
-    }
-
-    @PostMapping("/enviar")
-    public RespuestaDTO enviarMensaje(@RequestBody EnviarMensajeDTO enviarMensajeDTO, @RequestParam Integer idPerfil) {
-        Perfil perfil = perfilService.getById(idPerfil);
-        return mensajeService.enviarMensaje(perfil, enviarMensajeDTO);
-    }
-
-    @PutMapping("/editar/{mensajeId}")
-    public Mensaje editarMensaje(@PathVariable Integer mensajeId, @RequestBody Mensaje mensajeActualizado) {
-        return mensajeService.editarMensaje(mensajeId, mensajeActualizado);
-    }
-
-    @DeleteMapping("/eliminar/{mensajeId}")
-    public void eliminarMensaje(@PathVariable Integer mensajeId) {
-        mensajeService.eliminarMensaje(mensajeId);
+    @GetMapping("/{roomId}")
+    @ResponseBody
+    public List<Mensaje> obtenerMensajesPorRoomId(@PathVariable String roomId) {
+        return mensajeService.obtenerMensajesPorRoomId(roomId);
     }
 }
+
+
+
+/*
+public class MensajeController {
+
+    private final MensajeService mensajeService;
+
+    @MessageMapping("/test")
+    @SendTo("/tema/test")
+
+    public Mensaje enviarMensaje( Mensaje mensaje) throws Exception {
+        return mensajeService.guardarMensaje("1", mensaje);
+    }
+    */
+/*@DestinationVariable*//*
+
+
+    @MessageMapping("/hello")
+    @SendTo("/topic/greetings")
+    public Greeting greeting(HelloMessage message) throws Exception {
+        Thread.sleep(1000); // simulated delay
+        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+    }
+}*/

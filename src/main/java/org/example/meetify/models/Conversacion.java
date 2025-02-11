@@ -1,3 +1,4 @@
+/*
 // Conversacion.java
 package org.example.meetify.models;
 
@@ -26,4 +27,4 @@ public class Conversacion {
 
     @OneToMany(mappedBy = "conversacion")
     private List<Mensaje> mensajes;
-}
+}*/

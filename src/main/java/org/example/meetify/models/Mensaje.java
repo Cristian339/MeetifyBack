@@ -1,4 +1,3 @@
-// Mensaje.java
 package org.example.meetify.models;
 
 import jakarta.persistence.*;
@@ -26,19 +25,18 @@ public class Mensaje {
 
     @ManyToOne
     @JoinColumn(name = "usuario_emisor_id", nullable = false)
-    private Perfil emisor;
+    private Usuario usuarioEmisor;
 
     @ManyToOne
     @JoinColumn(name = "usuario_receptor_id", nullable = false)
-    private Perfil receptor;
-
-    @ManyToOne
-    @JoinColumn(name = "conversacion_id", nullable = false)
-    private Conversacion conversacion;
+    private Usuario usuarioReceptor;
 
     @Column(name = "fecha_enviado")
     private LocalDate fechaEnviado;
 
     @Column(name = "hora_enviado")
     private LocalTime horaEnviado;
+
+    @Column(name = "room_id", nullable = false)
+    private Integer roomId;
 }

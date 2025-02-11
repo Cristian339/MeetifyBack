@@ -3,6 +3,7 @@ package org.example.meetify.Controller;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.CategoriaDTO;
 import org.example.meetify.DTO.PerfilDTO;
+import org.example.meetify.DTO.PerfilIDDTO;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.Services.*;
 import org.example.meetify.models.Categoria;
@@ -29,6 +30,12 @@ public class PerfilController {
     public PerfilDTO obtenerMiPerfil(@RequestHeader("Authorization") String token) {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
         return perfilService.getPerfilDTOPorId(perfilLogueado.getId());
+    }
+
+    @GetMapping("/mi-id")
+    public PerfilIDDTO obtenerMiPerfilId(@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return perfilService.getPerfilIDDTOById(perfilLogueado.getId());
     }
 
     @PostMapping("/actualizar-categorias/{correo}")

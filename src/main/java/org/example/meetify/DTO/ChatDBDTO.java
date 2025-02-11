@@ -1,3 +1,4 @@
+/*
 package org.example.meetify.DTO;
 
 import lombok.AllArgsConstructor;
@@ -15,3 +16,4 @@ public class ChatDBDTO {
     private String mensaje;
     private PerfilDTO perfilDTO;
 }
+*/
