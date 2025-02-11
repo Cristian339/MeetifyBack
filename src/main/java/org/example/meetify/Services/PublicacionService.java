@@ -318,4 +318,13 @@ public class PublicacionService {
     }
 
 
+    public boolean estaEnPublicacion(Integer idPublicacion, Perfil perfil) {
+
+
+        Publicacion publicacion = publicacionRepository.findById(idPublicacion)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publicacion no encontrada"));
+
+        return publicacionPerfilRepository.findByPerfilAndPublicacion(perfil, publicacion).isPresent();
+    }
+
 }

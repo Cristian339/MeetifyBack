@@ -98,4 +98,14 @@ public class PuntuacionService {
                         reputacion.getEstrellas()))
                 .collect(Collectors.toList());
     }
+
+
+    public Integer obtenerCreador(Integer id){
+        Publicacion publicacion = publicacionRepository.findById(id).orElse(null);
+        if (publicacion != null) {
+            return publicacion.getUsuarioCreador().getId();
+        }else {
+            throw new RuntimeException("Esta publicacion no existe");
+        }
+    }
 }
