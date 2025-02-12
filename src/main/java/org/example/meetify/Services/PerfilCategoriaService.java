@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,6 +132,19 @@ public class PerfilCategoriaService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+
+    public List<CategoriaDTO> verCategoriasNoElegidasPorPerfil(Perfil perfil) {
+      List<CategoriaDTO> todas = verTodasLasCategorias();
+      List<CategoriaDTO> suyas = verCategoriasElegidasPorPerfil(perfil);
+      List<CategoriaDTO> resto = new ArrayList<>();
+      for (CategoriaDTO c : todas){
+          if(!suyas.contains(c)){
+              resto.add(c);
+          }
+      }
+      return resto;
     }
 
 }

@@ -5,10 +5,7 @@ import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.DTO.PublicacionIdDTO;
 import org.example.meetify.DTO.UsuarioDTO;
-import org.example.meetify.Repositories.CategoriaRepository;
-import org.example.meetify.Repositories.PerfilRepository;
-import org.example.meetify.Repositories.publicacionPerfilRepository;
-import org.example.meetify.Repositories.PublicacionRepository;
+import org.example.meetify.Repositories.*;
 import org.example.meetify.models.*;
 import org.example.meetify.seguridad.JWTFilter;
 import org.springframework.http.HttpStatus;
@@ -24,6 +21,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PublicacionService {
 
+    private final UsuarioRepository usuarioRepository;
     private PublicacionRepository repository;
 
     private JWTFilter jwtFilter;
@@ -325,6 +323,15 @@ public class PublicacionService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publicacion no encontrada"));
 
         return publicacionPerfilRepository.findByPerfilAndPublicacion(perfil, publicacion).isPresent();
+    }
+
+
+
+    public Perfil obtenerPerfilPorPublicacion(Integer id){
+        Publicacion publicacion = repository.findById(id).orElse(null);
+        Usuario usuario = usuarioRepository.getById(publicacion.getUsuarioCreador().getId());
+        return perfilService.obtenerPerfilPorCorreo(usuario.getCorreoElectronico());
+
     }
 
 }

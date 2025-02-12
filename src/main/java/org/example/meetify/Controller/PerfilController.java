@@ -117,4 +117,14 @@ public class PerfilController {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
         return perfilCategoriaService.verCategoriasElegidasPorPerfil(perfilLogueado);
     }
+
+    @GetMapping("/noelegidas")
+    public List<CategoriaDTO> verCategoriasNoElegidasPorPerfil(@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return perfilCategoriaService.verCategoriasNoElegidasPorPerfil(perfilLogueado);
+    }
+
+
+
+
 }

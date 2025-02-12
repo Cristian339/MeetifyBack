@@ -1,11 +1,8 @@
 package org.example.meetify.Controller;
 
 import lombok.AllArgsConstructor;
-import org.example.meetify.DTO.PublicacionDTO;
-import org.example.meetify.DTO.PublicacionIdDTO;
-import org.example.meetify.DTO.PuntuacionDTO;
+import org.example.meetify.DTO.*;
 import org.example.meetify.Repositories.PublicacionRepository;
-import org.example.meetify.DTO.UsuarioDTO;
 import org.example.meetify.Services.*;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
@@ -25,6 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PublicacionController {
 
+    private final PerfilService perfilService;
     private PublicacionService service;
 
     private PuntuacionService puntuacionService;
@@ -93,7 +91,6 @@ public class PublicacionController {
     }
 
     @GetMapping("/usuarios-unidos/{idPublicacion}")
-    @PreAuthorize("isAuthenticated()")
     public List<UsuarioDTO> obtenerUsuariosUnidos(@PathVariable Integer idPublicacion) {
         return service.obtenerUsuariosUnidos(idPublicacion);
     }
@@ -133,6 +130,17 @@ public class PublicacionController {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
 
         return service.estaEnPublicacion(id,perfilLogueado);
+    }
+
+
+    @GetMapping("/otro-usuario/{id}")
+    public PerfilDTO obtenerPerfilAjeno(@PathVariable Integer id) {
+        Perfil perfil = service.obtenerPerfilPorPublicacion(id);
+        PerfilDTO dto = new PerfilDTO(perfil.getNombre(), perfil.getApellidos(), perfil.getCorreoElectronico(),
+                perfil.getUsuario().getNombreUsuario(), perfil.getPuntajeTotal(), perfil.getGenero(),
+                perfil.getBiografia(), perfil.getPais(), perfil.getFechaNacimiento(), perfil.getImagenUrlPerfil());
+
+        return dto;
     }
 
 
