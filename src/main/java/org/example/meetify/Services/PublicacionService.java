@@ -275,6 +275,26 @@ public class PublicacionService {
     }
 
 
+
+    public List<PublicacionDTO> verPublicacionesOtro(Integer id) {
+
+        Perfil perfil = perfilService.getById(id);
+        Usuario usuario = usuarioService.obtenerUsuarioPorCorreo(perfil.getCorreoElectronico());
+        List<Publicacion> publicaciones = repository.findByUsuarioCreador(usuario);
+        List<PublicacionDTO> publicacionDTOS = new ArrayList<>();
+
+        for (Publicacion p : publicaciones) {
+            Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(p.getUsuarioCreador().getCorreoElectronico());
+            PublicacionDTO dto = new PublicacionDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
+                    p.getCategoria().getNombre(), p.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
+                    p.getTitulo(), p.getDescripcion(), p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
+            publicacionDTOS.add(dto);
+        }
+
+        return publicacionDTOS;
+    }
+
+
     public List<PublicacionIdDTO> publicacionesPerfil(String correo) {
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(correo);
 

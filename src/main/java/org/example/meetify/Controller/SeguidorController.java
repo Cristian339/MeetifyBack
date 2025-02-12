@@ -20,10 +20,21 @@ public class SeguidorController {
         return seguidoresService.obtenerSeguidores();
     }
 
+
+    @GetMapping("/seguidores-otro/{id}")
+    public List<SeguidorDTO> obtenerSeguidoresOtro(@PathVariable Integer id) {
+        return seguidoresService.obtenerSeguidoresOtro(id);
+    }
+
     @GetMapping("/seguidos")
     @PreAuthorize("isAuthenticated()")
     public List<SeguidorDTO> obtenerSeguidos() {
         return seguidoresService.obtenerSeguidos();
+    }
+
+    @GetMapping("/seguidos-otro/{id}")
+    public List<SeguidorDTO> obtenerSeguidosOtro(@PathVariable Integer id) {
+        return seguidoresService.obtenerSeguidosOtro(id);
     }
 
     @GetMapping("/amigos")

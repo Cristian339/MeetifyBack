@@ -35,6 +35,16 @@ public class SeguidoresService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<SeguidorDTO> obtenerSeguidoresOtro(Integer id) {
+        Perfil perfil = perfilRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nadie te sigue"));
+
+        return perfil.getSeguidores().stream()
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR,perfil.getImagenUrlPerfil()))
+                .collect(Collectors.toList());
+    }
+
     public List<SeguidorDTO> obtenerSeguidos() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
@@ -45,6 +55,20 @@ public class SeguidoresService {
                 .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO, perfil.getImagenUrlPerfil()))
                 .collect(Collectors.toList());
     }
+
+
+    public List<SeguidorDTO> obtenerSeguidosOtro(Integer id) {
+        Perfil perfil = perfilRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No sigues a nadie"));
+
+        return perfil.getSeguidos().stream()
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO,perfil.getImagenUrlPerfil()))
+                .collect(Collectors.toList());
+    }
+
+
+
+
 
     public List<SeguidorDTO> obtenerAmigos() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
