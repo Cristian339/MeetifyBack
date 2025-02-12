@@ -1,3 +1,4 @@
+/*
 package org.example.meetify.DTO;
 
 import lombok.AllArgsConstructor;
@@ -17,3 +18,4 @@ public class ConversacionDTO {
     private LocalDateTime fechaUltimoMensaje;
 
 }
+*/

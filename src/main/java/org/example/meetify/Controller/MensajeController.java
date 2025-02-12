@@ -26,7 +26,7 @@ public class MensajeController {
         return mensajeService.guardarMensaje(roomId, mensaje);
     }
 
-    @GetMapping("/{roomId}")
+    @GetMapping("/mensajes/room/{roomId}")
     @ResponseBody
     public List<Mensaje> obtenerMensajesPorRoomId(@PathVariable String roomId) {
         return mensajeService.obtenerMensajesPorRoomId(roomId);

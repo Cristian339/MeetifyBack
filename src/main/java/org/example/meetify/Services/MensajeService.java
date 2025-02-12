@@ -16,7 +16,7 @@ public class MensajeService {
     private final MensajeRepository mensajeRepository;
 
     public Mensaje guardarMensaje(String roomId, Mensaje mensaje) {
-        mensaje.setRoomId(Integer.parseInt(roomId));
+        mensaje.setRoomId(roomId);
         mensaje.setFechaEnviado(LocalDate.now());
         mensaje.setHoraEnviado(LocalTime.now());
         return mensajeRepository.save(mensaje);
@@ -38,6 +38,6 @@ public class MensajeService {
     }
 
     public List<Mensaje> obtenerMensajesPorRoomId(String roomId) {
-        return mensajeRepository.findByRoomId(Integer.parseInt(roomId));
+        return mensajeRepository.findByRoomId(roomId);
     }
 }
