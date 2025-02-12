@@ -34,8 +34,7 @@ public class Usuario implements UserDetails {
 
     @Column(name = "rol")
     @Enumerated(EnumType.ORDINAL)
-    private Rol rol;
-
+    private Rol rol = Rol.PERFIL;
     @ManyToOne
     @JoinColumn(name = "perfil_id")
     private Perfil perfil;

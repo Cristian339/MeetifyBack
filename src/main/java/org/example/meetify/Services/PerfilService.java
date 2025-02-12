@@ -7,6 +7,7 @@ import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.CategoriaDTO;
 import org.example.meetify.DTO.Mail;
 import org.example.meetify.DTO.PerfilDTO;
+import org.example.meetify.DTO.PerfilIDDTO;
 import org.example.meetify.Enum.Rol;
 import org.example.meetify.Mappers.PerfilMapper;
 import org.example.meetify.Repositories.CategoriaRepository;
@@ -35,19 +36,17 @@ public class PerfilService {
 
     private PerfilMapper perfilMapper;
 
-    private SeguidoresRepository seguidoresRepository;
-
-    public Perfil guardarPerfil(Perfil perfil){
+    public Perfil guardarPerfil(Perfil perfil) {
         return perfilRepository.save(perfil);
     }
 
 
-    public List<PerfilDTO> getAll(){
+    public List<PerfilDTO> getAll() {
 
         List<Perfil> perfiles = perfilRepository.findAll();
         List<PerfilDTO> perfilDTOS = new ArrayList<>();
 
-        for(Perfil p : perfiles){
+        for (Perfil p : perfiles) {
             PerfilDTO dto = new PerfilDTO();
             dto.setNombre(p.getNombre());
             dto.setApellidos(p.getApellidos());
@@ -63,28 +62,28 @@ public class PerfilService {
         return perfilDTOS;
     }
 
-    public Perfil getById(Integer id){
+    public Perfil getById(Integer id) {
         return perfilRepository.findById(id).orElse(null);
     }
 
-    public String eliminar(Integer id){
+    public String eliminar(Integer id) {
         String mensaje;
         Perfil perfil = getById(id);
 
-        if(perfil == null){
-            return  "Ese perfil no existe";
+        if (perfil == null) {
+            return "Ese perfil no existe";
         }
 
         try {
             perfilRepository.deleteById(id);
             perfil = getById(id);
-            if(perfil != null){
-                mensaje =  "No se pudo eliminar el perfil";
-            }else{
+            if (perfil != null) {
+                mensaje = "No se pudo eliminar el perfil";
+            } else {
                 mensaje = "Perfil eliminado correctamente";
             }
         } catch (Exception e) {
-            mensaje =  "No se pudo eliminar el perfil";
+            mensaje = "No se pudo eliminar el perfil";
         }
 
         return mensaje;
@@ -97,11 +96,11 @@ public class PerfilService {
         return perfil.orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
     }
 
-    public void eliminar(Perfil perfil){
+    public void eliminar(Perfil perfil) {
         perfilRepository.delete(perfil);
     }
 
-    public PerfilDTO getPerfilDTOPorId(Integer id){
+    public PerfilDTO getPerfilDTOPorId(Integer id) {
         Perfil perfil = getById(id);
         return perfilMapper.toDTO(perfil);
     }
@@ -127,17 +126,17 @@ public class PerfilService {
         return perfilMapper.toDTO(updatedPerfil);
     }
 
-    public Perfil buscarPorUsuario(Usuario usuario){
+    public Perfil buscarPorUsuario(Usuario usuario) {
         return perfilRepository.findTopByUsuario(usuario);
     }
 
 
-    public List<PerfilDTO> listaDeBaneados(){
+    public List<PerfilDTO> listaDeBaneados() {
         List<PerfilDTO> baneados = new ArrayList<>();
         List<Perfil> todos = perfilRepository.findAll();
 
-        for (Perfil p : todos){
-            if(p.getBaneado() && p.getUsuario().getRol() == Rol.PERFIL){
+        for (Perfil p : todos) {
+            if (p.getBaneado() && p.getUsuario().getRol() == Rol.PERFIL) {
                 PerfilDTO dto = new PerfilDTO();
                 dto.setNombre(p.getNombre());
                 dto.setApellidos(p.getApellidos());
@@ -149,12 +148,12 @@ public class PerfilService {
         return baneados;
     }
 
-    public List<PerfilDTO> listaDeNoBaneados(){
+    public List<PerfilDTO> listaDeNoBaneados() {
         List<PerfilDTO> baneados = new ArrayList<>();
         List<Perfil> todos = perfilRepository.findAll();
 
-        for (Perfil p : todos){
-            if(!p.getBaneado() && p.getUsuario().getRol() == Rol.PERFIL){
+        for (Perfil p : todos) {
+            if (!p.getBaneado() && p.getUsuario().getRol() == Rol.PERFIL) {
                 PerfilDTO dto = perfilMapper.toDTO(p);
                 baneados.add(dto);
             }
@@ -162,12 +161,12 @@ public class PerfilService {
         return baneados;
     }
 
-    public void ban(String correo){
+    public void ban(String correo) {
         Perfil perfil = obtenerPerfilPorCorreo(correo);
 
-        if(perfil.getBaneado()){
+        if (perfil.getBaneado()) {
             perfil.setBaneado(false);
-        }else{
+        } else {
             perfil.setBaneado(true);
         }
 
@@ -195,6 +194,14 @@ public class PerfilService {
 
         Perfil updatedPerfil = perfilRepository.save(perfil);
         return perfilMapper.toDTO(updatedPerfil);
+    }
+
+    public PerfilIDDTO getPerfilIDDTOById(Integer id) {
+        Perfil perfil = getById(id);
+        if (perfil == null) {
+            throw new IllegalArgumentException("Perfil not found with id: " + id);
+        }
+        return new PerfilIDDTO(perfil.getId());
     }
 }
 
