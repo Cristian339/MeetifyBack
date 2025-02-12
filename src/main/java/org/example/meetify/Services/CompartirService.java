@@ -3,6 +3,7 @@ package org.example.meetify.Services;
 import lombok.RequiredArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
 import org.example.meetify.Repositories.CompartirRepository;
+import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.models.Compartir;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
@@ -34,6 +35,9 @@ public class CompartirService {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private PerfilRepository perfilRepository;
+
     // Permitir a un usuario compartir una publicación
     public PublicacionDTO compartirPublicacion(int publicacionId, Perfil perfil) {
 
@@ -55,6 +59,30 @@ public class CompartirService {
         }
     }
 
+
+    public List<PublicacionDTO> obtenerPublicacionesCompartidasPorOtroPerfil(Integer id) {
+        Perfil perfil = perfilRepository.findById(id).orElse(null);
+        List<Publicacion> publicaciones = compartirRepository.findByPerfil_Id(perfil.getId())
+                .stream()
+                .map(Compartir::getPublicacion)
+                .toList();
+
+
+        List<PublicacionDTO> publicacionesDTO = new ArrayList<>();
+        for (Publicacion publicacion : publicaciones) {
+            PublicacionDTO dto = new PublicacionDTO(publicacion.getId(), publicacion.getUsuarioCreador().getNombreUsuario(),
+                    publicacion.getCategoria().getNombre(), publicacion.getImagenUrlPub(), publicacion.getImagenUrlPerfil(),
+                    publicacion.getTitulo(), publicacion.getDescripcion(), publicacion.getUbicacion(),
+                    publicacion.getFechaIni(), publicacion.getFechaFin());
+
+            // Añadir el DTO a la lista
+            publicacionesDTO.add(dto);
+        }
+
+        return publicacionesDTO;
+    }
+
+
     public List<Publicacion> obtenerPublicacionesCompartidasPorPerfil() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
@@ -64,6 +92,9 @@ public class CompartirService {
                 .map(Compartir::getPublicacion)
                 .collect(Collectors.toList());
     }
+
+
+
 
     public List<PublicacionDTO> publicacionesCompartidas() {
         // Obtener las publicaciones compartidas por el perfil

@@ -16,6 +16,7 @@ import org.example.meetify.seguridad.JWTService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -43,6 +44,12 @@ public class PerfilController {
     }
 
 
+    @GetMapping("/compartidos-otro/{id}")
+    public List<PublicacionDTO> obtenerPublicacionesCompartidasDeOtro(@PathVariable Integer id) {
+        return compartirService.obtenerPublicacionesCompartidasPorOtroPerfil(id);
+
+    }
+
     @GetMapping("/compartidos")
     public List<PublicacionDTO> obtenerPublicacionesCompartidas() {
         return compartirService.publicacionesCompartidas();
@@ -62,6 +69,20 @@ public class PerfilController {
 
         return perfilCategoriaService.obtenerCategoriasPorPerfil2();
     }
+
+
+    @GetMapping("/categorias-otro/{id}")
+    public List<CategoriaDTO> obtenerCategoriasOtro(@PathVariable Integer id) {
+        Perfil perfil = perfilRepository.findById(id).orElse(null);
+        List<Categoria> categorias = perfilCategoriaService.obtenerCategoriasPorPerfil(perfil);
+        List<CategoriaDTO> dtos = new ArrayList<>();
+        for (Categoria categoria : categorias) {
+            CategoriaDTO categoriaDTO = new CategoriaDTO(categoria.getId(),categoria.getNombre());
+            dtos.add(categoriaDTO);
+        }
+        return dtos;
+    }
+
 
     @PostMapping("/eliminar/{contrasenia}")
     public void eliminarCuenta(@PathVariable String contrasenia,@RequestHeader("Authorization") String token){
