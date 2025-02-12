@@ -11,6 +11,6 @@ public class SeguidorDTO {
     private Integer id;
     private String nombre;
     private Estado estado;
-    private String imageUrlPerfil;
+    private String imagenUrlPerfil;
 
 }

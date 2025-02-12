@@ -14,7 +14,8 @@ public class PublicacionIdDTO {
     private Integer id;
     private String nombrePerfil;
     private String categoria;
-    private String imageUrl;
+    private String imagenUrlPub;
+    private String imagenUrlPerfil;
     private String titulo;
     private String descripcion;
     private String ubicacion;
