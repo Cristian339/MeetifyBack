@@ -1,6 +1,5 @@
 package org.example.meetify.Controller;
 
-import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.LoginDTO;
 import org.example.meetify.DTO.RegistroDTO;
@@ -16,17 +15,27 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class AuthController {
 
-    private final UsuarioService usuarioService;
-    private final AuthService authService;
+
+    private UsuarioService RegisterService;
+    private AuthService LogService;
 
     @PostMapping("/registro")
-    public ResponseEntity<String> registro(@RequestBody RegistroDTO registroDTO) {
-        usuarioService.registrarUsuario(registroDTO);
-        return ResponseEntity.ok("Registro exitoso. Revisa tu correo para verificar tu cuenta.");
+    public Usuario registro(@RequestBody RegistroDTO registroDTO){
+        return RegisterService.registrarUsuario(registroDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<RespuestaDTO> login(@RequestBody LoginDTO dto) {
-        return authService.iniciarSesion(dto);
+    public ResponseEntity<RespuestaDTO> registro(@RequestBody LoginDTO dto){
+        return LogService.iniciarSesion(dto);
+    }
+
+    @GetMapping("/verificar")
+    public ResponseEntity<String> verificarCorreo(@RequestParam("correo") String correo) {
+        boolean isVerified = RegisterService.verificarCorreo(correo);
+        if (isVerified) {
+            return ResponseEntity.ok("Correo verificado exitosamente.");
+        } else {
+            return ResponseEntity.badRequest().body("Error al verificar el correo.");
+        }
     }
 }

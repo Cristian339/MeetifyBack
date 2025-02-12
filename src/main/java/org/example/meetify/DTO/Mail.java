@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 public class Mail {
 
-    private String email;
-    private String content;
-    private String subject;
+    private String destinatario;
+    private String asunto;
+    private String mensaje;
 }
