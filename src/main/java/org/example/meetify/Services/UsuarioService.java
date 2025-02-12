@@ -33,8 +33,6 @@ public class UsuarioService implements UserDetailsService {
     private final PasswordEncoder codificadorContrasenia;
 
 
-
-
     public Usuario obtenerUsuarioPorNombre(String nombreUsuario) {
         Optional<Usuario> usuario = usuarioRepository.findTopByNombreUsuario(nombreUsuario);
         return usuario.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ese nombre de usuario"));

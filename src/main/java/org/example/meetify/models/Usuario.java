@@ -75,4 +75,10 @@ public class Usuario implements UserDetails {
         return true;
     }
 
+    public void setCuentaVerificada(boolean b) {
+    }
+
+    public boolean isCuentaVerificada() {
+        return false;
+    }
 }

@@ -1,9 +1,11 @@
 package org.example.meetify.Services;
 
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.CategoriaDTO;
+import org.example.meetify.DTO.Mail;
 import org.example.meetify.DTO.PerfilDTO;
 import org.example.meetify.Enum.Rol;
 import org.example.meetify.Mappers.PerfilMapper;
@@ -22,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -37,7 +40,6 @@ public class PerfilService {
     public Perfil guardarPerfil(Perfil perfil){
         return perfilRepository.save(perfil);
     }
-
 
 
     public List<PerfilDTO> getAll(){

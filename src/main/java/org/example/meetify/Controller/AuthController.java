@@ -1,7 +1,7 @@
 package org.example.meetify.Controller;
 
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
-
 import org.example.meetify.DTO.LoginDTO;
 import org.example.meetify.DTO.RegistroDTO;
 import org.example.meetify.DTO.RespuestaDTO;
@@ -16,26 +16,17 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class AuthController {
 
-
     private final UsuarioService usuarioService;
-    private UsuarioService RegisterService;
-    private AuthService LogService;
-
-
+    private final AuthService authService;
 
     @PostMapping("/registro")
-    public Usuario registro(@RequestBody RegistroDTO registroDTO){
-        return RegisterService.registrarUsuario(registroDTO);
+    public ResponseEntity<String> registro(@RequestBody RegistroDTO registroDTO) {
+        usuarioService.registrarUsuario(registroDTO);
+        return ResponseEntity.ok("Registro exitoso. Revisa tu correo para verificar tu cuenta.");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<RespuestaDTO> registro(@RequestBody LoginDTO dto){
-        return LogService.iniciarSesion(dto);
+    public ResponseEntity<RespuestaDTO> login(@RequestBody LoginDTO dto) {
+        return authService.iniciarSesion(dto);
     }
-
-
-
-
-
 }
-
