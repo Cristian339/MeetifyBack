@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Verificación de correo</title>
+</head>
+<body>
+<p th:text="${mensaje}"></p>
+<a th:href="@{http://localhost:8080/verificar?correo=(correo)}" style="display: inline-block; padding: 10px 20px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px;">Verificar correo</a>
+</body>
+</html>

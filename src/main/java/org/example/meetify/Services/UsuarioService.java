@@ -1,27 +1,27 @@
 package org.example.meetify.Services;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 
 import org.example.meetify.DTO.RegistroDTO;
-
 import org.example.meetify.Enum.Rol;
 import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Usuario;
-import org.example.meetify.seguridad.JWTFilter;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-
-import static org.example.meetify.seguridad.AuthService.getRespuestaDTOResponseEntity;
 
 @Service
 @AllArgsConstructor
@@ -31,6 +31,8 @@ public class UsuarioService implements UserDetailsService {
 
     private final PerfilService perfilService;
     private final PasswordEncoder codificadorContrasenia;
+    private final JavaMailSender mailSender;
+    private final TemplateEngine templateEngine;
 
 
     public Usuario obtenerUsuarioPorNombre(String nombreUsuario) {
@@ -84,6 +86,9 @@ public class UsuarioService implements UserDetailsService {
         LocalDate fechaNacimiento = LocalDate.parse(dto.getFechaNacimiento(), formatter);
         perfil.setFechaNacimiento(fechaNacimiento);
 
+        // Enviar el correo
+        enviarCorreoRegistro(dto.getCorreoElectronico());
+
         try {
             Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
             perfil.setUsuario(usuarioGuardado);
@@ -92,5 +97,37 @@ public class UsuarioService implements UserDetailsService {
         } catch (Exception e) {
             throw new RuntimeException("Error al crear el usuario: " + e.getMessage());
         }
+    }
+
+    private void enviarCorreoRegistro(String correoElectronico) {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setTo(correoElectronico);
+            helper.setSubject("Verificación de correo");
+
+            Context context = new Context();
+            context.setVariable("mensaje", "¡Tu registro ha sido exitoso! Por favor, verifica tu correo electrónico.");
+            context.setVariable("correo", correoElectronico);
+
+            String htmlContent = templateEngine.process("Email", context);
+            helper.setText(htmlContent, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Error al enviar el correo: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Error al procesar la plantilla: " + e.getMessage());
+        }
+    }
+
+    public boolean verificarCorreo(String correoElectronico) {
+        Optional<Usuario> usuario = usuarioRepository.findTopByCorreoElectronico(correoElectronico);
+        if (usuario.isPresent()) {
+            Usuario usuarioVerificado = usuario.get();
+            usuarioRepository.save(usuarioVerificado);
+            return true;
+        }
+        return false;
     }
 }
