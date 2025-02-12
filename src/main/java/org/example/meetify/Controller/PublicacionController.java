@@ -6,10 +6,12 @@ import org.example.meetify.DTO.PublicacionIdDTO;
 import org.example.meetify.DTO.PuntuacionDTO;
 import org.example.meetify.Repositories.PublicacionRepository;
 import org.example.meetify.DTO.UsuarioDTO;
-import org.example.meetify.Services.CompartirService;
-import org.example.meetify.Services.PublicacionService;
-import org.example.meetify.Services.PuntuacionService;
+import org.example.meetify.Services.*;
+import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
+import org.example.meetify.models.Usuario;
+import org.example.meetify.seguridad.JWTFilter;
+import org.example.meetify.seguridad.JWTService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +30,10 @@ public class PublicacionController {
     private PuntuacionService puntuacionService;
 
     private PublicacionRepository repository;
+
+    private UsuarioService usuarioService;
+
+    private JWTService jwtService;
 
     @GetMapping("/all")
     public List<PublicacionIdDTO> general(){
@@ -107,6 +113,26 @@ public class PublicacionController {
     public ResponseEntity<List<PuntuacionDTO>> obtenerPuntuacionesDePublicacion(@PathVariable Integer idPublicacion) {
         List<PuntuacionDTO> puntuaciones = puntuacionService.obtenerPuntuacionesDePublicacion(idPublicacion);
         return ResponseEntity.ok(puntuaciones);
+    }
+
+
+    @GetMapping("/creador/{id}")
+    public boolean obtenerCreadorPublicacion(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        Usuario usuario = usuarioService.obtenerUsuarioPorCorreo(perfilLogueado.getCorreoElectronico());
+
+        if(usuario.getId() == id) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @GetMapping("/dentro/{id}")
+    public boolean dentroOFueradelEvento(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+
+        return service.estaEnPublicacion(id,perfilLogueado);
     }
 
 
