@@ -36,6 +36,8 @@ public class PerfilService {
 
     private PerfilMapper perfilMapper;
 
+    private SeguidoresRepository seguidoresRepository;
+
     public Perfil guardarPerfil(Perfil perfil) {
         return perfilRepository.save(perfil);
     }
