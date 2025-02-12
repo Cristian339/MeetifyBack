@@ -55,6 +55,11 @@ public class PublicacionController {
         return service.verMisPublicaciones();
     }
 
+    @GetMapping("all/otro/{id}")
+    public List<PublicacionDTO> gePublicationsOther(@PathVariable Integer id){
+        return service.verPublicacionesOtro(id);
+    }
+
     @PostMapping("del/{idPub}")
     public void eliminarPublicacion2(@PathVariable Integer idPub) {
         repository.deleteById(idPub);
