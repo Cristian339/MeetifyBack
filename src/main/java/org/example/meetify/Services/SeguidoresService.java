@@ -150,4 +150,24 @@ public class SeguidoresService {
         }
     }
 
+
+    public boolean seguirA(Integer idPerfilASeguir) {
+        // Obtener el perfil del usuario autenticado
+        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
+        Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
+        Perfil perfil = perfilRepository.findById(usuario.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil no encontrado"));
+
+        // Obtener el perfil del usuario al que se quiere comprobar si se sigue
+        Perfil perfilASeguir = perfilRepository.findById(idPerfilASeguir)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil no encontrado"));
+
+        // Buscar si existe una relación de seguimiento
+        Seguidores seguidores = seguidoresRepository.findBySeguidorAndSeguido(perfil, perfilASeguir);
+
+        // Si existe la relación, retornar verdadero (es decir, el usuario sigue al otro)
+        return seguidores != null;
+    }
+
+
 }

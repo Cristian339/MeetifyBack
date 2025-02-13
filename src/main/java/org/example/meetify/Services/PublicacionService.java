@@ -70,38 +70,57 @@ public class PublicacionService {
         return repository.findById(id).orElse(null);
     }
 
-    public List<PublicacionDTO> getSeguidos(){
+
+    public List<PublicacionIdDTO> getAllId(int id) {
+        List<Publicacion> publicaciones = repository.findAll();
+        List<PublicacionIdDTO> publicacionDTOS = new ArrayList<>();
+
+
+        Perfil perfil = perfilService.getById(id);
+
+        for (Publicacion p : publicaciones) {
+            // Filtra las publicaciones para excluir las del usuario autenticado
+            if (p.getUsuarioCreador().getCorreoElectronico().equals(perfil.getCorreoElectronico())) {
+
+                PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
+                        p.getCategoria().getNombre(), p.getImagenUrlPub(),p.getImagenUrlPerfil(), p.getTitulo(), p.getDescripcion(),
+                        p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
+                publicacionDTOS.add(dto);
+
+            }
+        }
+
+        return publicacionDTOS;
+
+    }
+
+
+
+
+
+    public List<PublicacionIdDTO> getSeguidos(){
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         System.out.println(correoAutenticado);
         Usuario usu = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(usu.getCorreoElectronico());
 
-        List<Publicacion> publis = repository.findAll();
-        List<PublicacionDTO> todas = new ArrayList<>();
-        for (Publicacion d : publis) {
-            Perfil perfilCreador = perfilService.obtenerPerfilPorCorreo(d.getUsuarioCreador().getCorreoElectronico());
-            todas.add(new PublicacionDTO(d.getId(), d.getUsuarioCreador().getNombreUsuario(),
-                    d.getCategoria().getNombre(), d.getImagenUrlPub(), perfilCreador.getImagenUrlPerfil(),
-                    d.getTitulo(), d.getDescripcion(), d.getUbicacion(), d.getFechaIni(), d.getFechaFin()));
-        }
+        List<PublicacionIdDTO> publicaciones = new ArrayList<>();
 
-
-
-
-        List<PublicacionDTO> publicaciones = new ArrayList<>();
-
-
-
-
-        for (PublicacionDTO p : todas){
-            Usuario us = usuarioService.obtenerUsuarioPorNombre(p.getNombrePerfil());
-            Perfil perfilPubli = perfilService.obtenerPerfilPorCorreo(us.getCorreoElectronico());
-
-            if(perfil.getSeguidos().contains(perfilPubli)){
+        for (Seguidores s : perfil.getSeguidos()){
+            List<PublicacionIdDTO> meter = getAllId(s.getSeguido().getId());
+            for (PublicacionIdDTO p : meter){
                 publicaciones.add(p);
             }
         }
+
         return publicaciones;
+
+//        Usuario us = usuarioService.obtenerUsuarioPorNombre(p.getNombrePerfil());
+//        Perfil perfilPubli = perfilService.obtenerPerfilPorCorreo(us.getCorreoElectronico());
+//
+//        if(perfil.getSeguidos().contains(perfilPubli)){
+//            publicaciones.add(p);
+//        }
     }
 
 
