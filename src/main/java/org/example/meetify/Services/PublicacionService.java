@@ -54,8 +54,9 @@ public class PublicacionService {
             // Filtra las publicaciones para excluir las del usuario autenticado
             if (!p.getUsuarioCreador().getCorreoElectronico().equals(perfil.getCorreoElectronico())) {
                 if (categorias.contains(p.getCategoria())) {
+                    Perfil perfil1 = perfilService.obtenerPerfilPorCorreo(p.getUsuarioCreador().getCorreoElectronico());
                     PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
-                            p.getCategoria().getNombre(), p.getImagenUrlPub(),p.getImagenUrlPerfil(), p.getTitulo(), p.getDescripcion(),
+                            p.getCategoria().getNombre(), p.getImagenUrlPub(),perfil1.getImagenUrlPerfil(), p.getTitulo(), p.getDescripcion(),
                             p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
                     publicacionDTOS.add(dto);
                 }
@@ -83,7 +84,7 @@ public class PublicacionService {
             if (p.getUsuarioCreador().getCorreoElectronico().equals(perfil.getCorreoElectronico())) {
 
                 PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
-                        p.getCategoria().getNombre(), p.getImagenUrlPub(),p.getImagenUrlPerfil(), p.getTitulo(), p.getDescripcion(),
+                        p.getCategoria().getNombre(), p.getImagenUrlPub(),perfil.getImagenUrlPerfil(), p.getTitulo(), p.getDescripcion(),
                         p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
                 publicacionDTOS.add(dto);
 
