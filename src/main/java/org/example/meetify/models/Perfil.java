@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
 @Entity
 @Table(name = "perfil", schema="meetify")
 public class Perfil {

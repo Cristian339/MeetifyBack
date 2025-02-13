@@ -21,6 +21,12 @@ public class SeguidorController {
     }
 
 
+    @GetMapping("/comprobar/{id}")
+    public boolean comprobarSiSigues(@PathVariable Integer id){
+        return seguidoresService.seguirA(id);
+    }
+
+
     @GetMapping("/seguidores-otro/{id}")
     public List<SeguidorDTO> obtenerSeguidoresOtro(@PathVariable Integer id) {
         return seguidoresService.obtenerSeguidoresOtro(id);

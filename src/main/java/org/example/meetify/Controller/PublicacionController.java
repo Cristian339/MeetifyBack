@@ -40,7 +40,7 @@ public class PublicacionController {
 
 
     @GetMapping("/segui")
-    public List<PublicacionDTO> seguidos(){
+    public List<PublicacionIdDTO> seguidos(){
         return service.getSeguidos();
     }
 
