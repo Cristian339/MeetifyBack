@@ -1,5 +1,6 @@
 package org.example.meetify.Services;
 
+import org.example.meetify.DTO.UltimoMensajeDTO;
 import org.example.meetify.Repositories.MensajeRepository;
 import org.example.meetify.models.Mensaje;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -40,4 +42,17 @@ public class MensajeService {
     public List<Mensaje> obtenerMensajesPorRoomId(String roomId) {
         return mensajeRepository.findByRoomId(roomId);
     }
+
+    public UltimoMensajeDTO obtenerUltimoMensajePorRoomId(String roomId) {
+        Optional<Mensaje> mensajeOptional = mensajeRepository.ultimoMensaje(roomId);
+        if (mensajeOptional.isPresent()) {
+            Mensaje mensaje = mensajeOptional.get();
+            return new UltimoMensajeDTO(mensaje.getContenido(), mensaje.getFechaEnviado(), mensaje.getHoraEnviado(), mensaje.getUsuarioEmisor().getId(), mensaje.getUsuarioReceptor().getId());
+        } else {
+            throw new IllegalArgumentException("No se encontró ningún mensaje para el roomId proporcionado");
+        }
+    }
+
+
+
 }

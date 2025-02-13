@@ -1,6 +1,7 @@
 package org.example.meetify.Controller;
 
 import lombok.AllArgsConstructor;
+import org.example.meetify.DTO.UltimoMensajeDTO;
 import org.example.meetify.models.Mensaje;
 import org.example.meetify.Services.MensajeService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -31,6 +33,12 @@ public class MensajeController {
     public List<Mensaje> obtenerMensajesPorRoomId(@PathVariable String roomId) {
         return mensajeService.obtenerMensajesPorRoomId(roomId);
     }
+
+    @GetMapping("/mensajes/ultimo/{roomId}")
+    public UltimoMensajeDTO obtenerUltimoMensajePorRoomId(@PathVariable String roomId) {
+        return mensajeService.obtenerUltimoMensajePorRoomId(roomId);
+    }
+
 }
 
 

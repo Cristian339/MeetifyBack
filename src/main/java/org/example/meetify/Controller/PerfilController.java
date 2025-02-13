@@ -1,10 +1,7 @@
 package org.example.meetify.Controller;
 
 import lombok.AllArgsConstructor;
-import org.example.meetify.DTO.CategoriaDTO;
-import org.example.meetify.DTO.PerfilDTO;
-import org.example.meetify.DTO.PerfilIDDTO;
-import org.example.meetify.DTO.PublicacionDTO;
+import org.example.meetify.DTO.*;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.Services.*;
@@ -43,6 +40,12 @@ public class PerfilController {
     public PerfilIDDTO obtenerMiPerfilId(@RequestHeader("Authorization") String token) {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
         return perfilService.getPerfilIDDTOById(perfilLogueado.getId());
+    }
+
+    @GetMapping("/nombre")
+    public UsuarioDTO obtenerNombreUsuario(@RequestHeader("Authorization") String token) {
+        Usuario usuario = jwtService.extraerUsuarioToken(token);
+        return new UsuarioDTO(usuario.getId(), usuario.getNombreUsuario());
     }
 
     @PostMapping("/actualizar-categorias/{correo}")

@@ -97,4 +97,12 @@ public class JWTService {
         Perfil perfilUsuarioLogueado = perfilService.buscarPorUsuario(usuarioLogueado);
         return perfilUsuarioLogueado;
     }
+
+
+    public Usuario extraerUsuarioToken(String token){
+        String tokenSinCabecera = token.substring(7);
+        TokenDataDTO tokenDataDTO = extractTokenData(tokenSinCabecera);
+        Usuario usuarioLogueado = (Usuario) usuarioService.loadUserByUsername(tokenDataDTO.getUsername());
+        return usuarioLogueado;
+    }
 }
