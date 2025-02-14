@@ -25,7 +25,7 @@ public class ReputacionService {
         Publicacion publicacion = publicacionService.encontrarPublicacionPorId(publicacionId);
         Perfil perfil = perfilService.obtenerPerfilPorCorreo(correoUsuario);
 
-        if (reputacionRepository.existePorPublicacionYPerfil(publicacion, perfil)) {
+        if (reputacionRepository.existsByPublicacionAndPerfil(publicacion, perfil)) {
             throw new IllegalArgumentException("El usuario ya ha puntuado esta publicación anteriormente");
         }
 

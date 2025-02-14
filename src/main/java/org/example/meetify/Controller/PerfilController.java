@@ -156,6 +156,10 @@ public class PerfilController {
     }
 
 
-
+    @GetMapping("/baneado")
+    public boolean verEstadoBaneo(@RequestHeader("Authorization") String token){
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return perfilLogueado.getBaneado();
+    }
 
 }
