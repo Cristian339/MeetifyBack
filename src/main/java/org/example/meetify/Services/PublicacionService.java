@@ -40,6 +40,8 @@ public class PublicacionService {
 
     private final publicacionPerfilRepository publicacionPerfilRepository;
 
+
+
     public List<PublicacionIdDTO> getAll() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         List<Publicacion> publicaciones = repository.findAll();

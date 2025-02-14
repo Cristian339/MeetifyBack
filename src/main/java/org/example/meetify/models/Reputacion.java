@@ -10,12 +10,11 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(name = "reputación", schema="meetify")
-
+@Table(name = "reputacion", schema="meetify")
 public class Reputacion {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reputacion_id")
     private Integer id;
 
     @ManyToOne
@@ -23,8 +22,9 @@ public class Reputacion {
     private Publicacion publicacion;
 
     @ManyToOne
-    @JoinColumn(name = "perfil_id", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Perfil perfil;
 
-    private double estrellas;
+    @Column(name = "estrellas", nullable = false)
+    private Integer estrellas;
 }

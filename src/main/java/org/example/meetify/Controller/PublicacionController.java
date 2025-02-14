@@ -6,6 +6,7 @@ import org.example.meetify.Repositories.PublicacionRepository;
 import org.example.meetify.Services.*;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Publicacion;
+import org.example.meetify.models.Reputacion;
 import org.example.meetify.models.Usuario;
 import org.example.meetify.seguridad.JWTFilter;
 import org.example.meetify.seguridad.JWTService;
@@ -25,11 +26,11 @@ public class PublicacionController {
     private final PerfilService perfilService;
     private PublicacionService service;
 
-    private PuntuacionService puntuacionService;
-
     private PublicacionRepository repository;
 
     private UsuarioService usuarioService;
+
+    private ReputacionService reputacionService;
 
     private JWTService jwtService;
 
@@ -106,16 +107,7 @@ public class PublicacionController {
         service.salirPublicacion(idPublicacion);
     }
 
-    @PostMapping("/puntuacion/{idPublicacion}/{estrellas}")
-    public void puntuarPublicacion(@PathVariable Integer idPublicacion, @PathVariable Integer estrellas) {
-        puntuacionService.puntuarPublicacion(idPublicacion, estrellas);
-    }
 
-    @GetMapping("/puntuaciones/{idPublicacion}")
-    public ResponseEntity<List<PuntuacionDTO>> obtenerPuntuacionesDePublicacion(@PathVariable Integer idPublicacion) {
-        List<PuntuacionDTO> puntuaciones = puntuacionService.obtenerPuntuacionesDePublicacion(idPublicacion);
-        return ResponseEntity.ok(puntuaciones);
-    }
 
 
     @GetMapping("/creador/{id}")
@@ -141,11 +133,17 @@ public class PublicacionController {
     @GetMapping("/otro-usuario/{id}")
     public PerfilDTO obtenerPerfilAjeno(@PathVariable Integer id) {
         Perfil perfil = service.obtenerPerfilPorPublicacion(id);
-        PerfilDTO dto = new PerfilDTO(perfil.getNombre(), perfil.getApellidos(), perfil.getCorreoElectronico(),
+
+        return new PerfilDTO(perfil.getNombre(), perfil.getApellidos(), perfil.getCorreoElectronico(),
                 perfil.getUsuario().getNombreUsuario(), perfil.getPuntajeTotal(), perfil.getGenero(),
                 perfil.getBiografia(), perfil.getPais(), perfil.getFechaNacimiento(), perfil.getImagenUrlPerfil());
+    }
 
-        return dto;
+
+    @PostMapping("/{idPublicacion}/puntuar")
+    public ResponseEntity<Reputacion> puntuarPublicacion(@PathVariable Integer idPublicacion, @RequestParam String correoUsuario, @RequestParam Integer estrellas) {
+        Reputacion reputacion = reputacionService.puntuarPublicacion(idPublicacion, correoUsuario, estrellas);
+        return ResponseEntity.ok(reputacion);
     }
 
 
