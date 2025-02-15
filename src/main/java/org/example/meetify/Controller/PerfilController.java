@@ -48,9 +48,10 @@ public class PerfilController {
         return new UsuarioDTO(usuario.getId(), usuario.getNombreUsuario());
     }
 
-    @PostMapping("/actualizar-categorias/{correo}")
-    public void cambiarCategorias(@RequestBody List<String> categorias,@PathVariable String correo) {
-        publicacionService.cambiarCategoriaPerfil(categorias,correo);
+    @PostMapping("/actualizar-categorias")
+    public void cambiarCategorias(@RequestBody List<String> categorias,@RequestHeader("Authorization") String token) {
+        Perfil perfil = jwtService.extraerPerfilToken(token);
+        publicacionService.cambiarCategoriaPerfil(categorias,perfil);
     }
 
 
@@ -160,6 +161,20 @@ public class PerfilController {
     public boolean verEstadoBaneo(@RequestHeader("Authorization") String token){
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
         return perfilLogueado.getBaneado();
+    }
+
+    @GetMapping("/entrada")
+    public boolean verEstadoEntrada(@RequestHeader("Authorization") String token){
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return perfilLogueado.getEntrada();
+    }
+
+
+    @PostMapping("/entrada/hecha")
+    public void cambiarEstadoEntrada(@RequestHeader("Authorization") String token){
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        perfilLogueado.setEntrada(true);
+        perfilRepository.save(perfilLogueado);
     }
 
 }

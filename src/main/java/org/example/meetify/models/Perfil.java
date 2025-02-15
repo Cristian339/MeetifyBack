@@ -55,6 +55,9 @@ public class Perfil {
     @Column(name = "baneado", nullable = true)
     private Boolean baneado;
 
+    @Column(name = "entrada", nullable = true)
+    private Boolean entrada;
+
     @Column(name = "imagen_url", nullable = true)
     private String imagenUrlPerfil;
 

@@ -80,6 +80,7 @@ public class UsuarioService implements UserDetailsService {
         perfil.setApellidos(dto.getApellidos());
         perfil.setCorreoElectronico(dto.getCorreoElectronico());
         perfil.setBaneado(false);
+        perfil.setEntrada(false);
 
         // FECHA NACIMIENTO (STRING) -> LOCALDATE
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

@@ -33,7 +33,8 @@ CREATE TABLE perfil (
                         genero INT,
                         biografia TEXT,
                         privado BOOLEAN DEFAULT FALSE,
-                        baneado BOOLEAN DEFAULT FALSE
+                        baneado BOOLEAN DEFAULT FALSE,
+                        entrada BOOLEAN DEFAULT FALSE
 );
 
 -- Crear tabla categoria

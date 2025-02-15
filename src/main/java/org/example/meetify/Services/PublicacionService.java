@@ -336,8 +336,7 @@ public class PublicacionService {
     }
 
 
-    public void cambiarCategoriaPerfil(List<String> categorias, String correo){
-        Perfil perfil = perfilService.obtenerPerfilPorCorreo(correo);
+    public void cambiarCategoriaPerfil(List<String> categorias, Perfil perfil){
         for(String c : categorias){
             Categoria cat = categoriaRepository.findByNombre(c);
             if (cat != null){
