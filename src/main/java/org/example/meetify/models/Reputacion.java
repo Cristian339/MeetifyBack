@@ -27,4 +27,7 @@ public class Reputacion {
 
     @Column(name = "estrellas", nullable = false)
     private Integer estrellas;
+
+    @Column(name = "motivo", nullable = true)
+    private String motivo;
 }

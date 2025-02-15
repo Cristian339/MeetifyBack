@@ -17,13 +17,16 @@ public class ReputacionService {
     private final PerfilService perfilService;
 
     @Transactional
-    public Reputacion puntuarPublicacion(Integer publicacionId, String correoUsuario, Integer estrellas) {
+    public Reputacion puntuarPublicacion(Integer publicacionId, Perfil perfil, Integer estrellas) {
         if (estrellas < 1 || estrellas > 5) {
             throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5 estrellas");
         }
 
         Publicacion publicacion = publicacionService.encontrarPublicacionPorId(publicacionId);
-        Perfil perfil = perfilService.obtenerPerfilPorCorreo(correoUsuario);
+
+        if (!publicacionService.estaEnPublicacion(publicacionId, perfil)) {
+            throw new IllegalArgumentException("El usuario no es miembro del evento y no puede puntuar la publicación");
+        }
 
         if (reputacionRepository.existsByPublicacionAndPerfil(publicacion, perfil)) {
             throw new IllegalArgumentException("El usuario ya ha puntuado esta publicación anteriormente");

@@ -21,6 +21,4 @@ public class PerfilDTO {
     private String pais;
     private LocalDate fechaNacimiento;
     private String imagenUrlPerfil;
-
-
 }

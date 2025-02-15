@@ -9,6 +9,7 @@ import org.example.meetify.models.Usuario;
 import org.example.meetify.seguridad.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("/auth")
@@ -16,26 +17,30 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
 
-    private UsuarioService RegisterService;
+    private final UsuarioService registerService;
+
     private AuthService LogService;
 
     @PostMapping("/registro")
-    public Usuario registro(@RequestBody RegistroDTO registroDTO){
-        return RegisterService.registrarUsuario(registroDTO);
+    public Usuario registro(@RequestBody RegistroDTO registroDTO) {
+        return registerService.registrarUsuario(registroDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<RespuestaDTO> registro(@RequestBody LoginDTO dto){
+    public ResponseEntity<RespuestaDTO> registro(@RequestBody LoginDTO dto) {
         return LogService.iniciarSesion(dto);
     }
 
-    @GetMapping("/verificar")
-    public ResponseEntity<String> verificarCorreo(@RequestParam("correo") String correo) {
-        boolean isVerified = RegisterService.verificarCorreo(correo);
-        if (isVerified) {
-            return ResponseEntity.ok("Correo verificado exitosamente.");
+
+    @GetMapping("/verificar-correo")
+    public RedirectView verificarCorreo(@RequestParam String correo) {
+        boolean verificado = registerService.verificarCorreo(correo);
+        if (verificado) {
+            return new RedirectView("/login");
         } else {
-            return ResponseEntity.badRequest().body("Error al verificar el correo.");
+            return new RedirectView("/error");
         }
     }
+
+
 }

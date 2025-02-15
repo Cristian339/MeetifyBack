@@ -141,9 +141,9 @@ public class PublicacionController {
 
 
     @PostMapping("/{idPublicacion}/puntuar")
-    public ResponseEntity<Reputacion> puntuarPublicacion(@PathVariable Integer idPublicacion, @RequestParam String correoUsuario, @RequestParam Integer estrellas) {
-        Reputacion reputacion = reputacionService.puntuarPublicacion(idPublicacion, correoUsuario, estrellas);
-        return ResponseEntity.ok(reputacion);
+    public Reputacion puntuarPublicacion(@PathVariable Integer idPublicacion, @RequestParam Integer estrellas, @RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return  reputacionService.puntuarPublicacion(idPublicacion, perfilLogueado, estrellas);
     }
 
 

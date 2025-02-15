@@ -121,7 +121,7 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
-    public boolean verificarCorreo(String correoElectronico) {
+    /*public boolean verificarCorreo(String correoElectronico) {
         Optional<Usuario> usuario = usuarioRepository.findTopByCorreoElectronico(correoElectronico);
         if (usuario.isPresent()) {
             Usuario usuarioVerificado = usuario.get();
@@ -129,5 +129,40 @@ public class UsuarioService implements UserDetailsService {
             return true;
         }
         return false;
+    }*/
+
+    public boolean verificarCorreo(String correoElectronico) {
+        Optional<Usuario> usuarioExistente = usuarioRepository.findTopByCorreoElectronico(correoElectronico);
+        if (usuarioExistente.isPresent()) {
+            Usuario usuario = usuarioExistente.get();
+            if (!usuario.isCuentaVerificada()) {
+                usuario.setCuentaVerificada(true);
+                usuarioRepository.save(usuario);
+                return true;
+            }
+        } else {
+            // Crear y guardar el nuevo usuario
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setCorreoElectronico(correoElectronico);
+            nuevoUsuario.setCuentaVerificada(true);
+            usuarioRepository.save(nuevoUsuario);
+            return true;
+        }
+        return false;
     }
+
+    @Transactional
+    public void iniciarRegistroUsuario(RegistroDTO dto) {
+        if (usuarioRepository.findTopByCorreoElectronico(dto.getCorreoElectronico()).isPresent()) {
+            throw new IllegalArgumentException("El correo electrónico ya está en uso");
+        }
+
+        if (usuarioRepository.findTopByNombreUsuario(dto.getNombreUsuario()).isPresent()) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+        }
+
+        // Enviar el correo de verificación
+        enviarCorreoRegistro(dto.getCorreoElectronico());
+    }
+
 }
