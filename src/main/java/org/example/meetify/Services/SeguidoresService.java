@@ -1,6 +1,7 @@
 package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
+import org.example.meetify.DTO.AmigoDTO;
 import org.example.meetify.DTO.SeguidorDTO;
 import org.example.meetify.Repositories.SeguidoresRepository;
 import org.example.meetify.models.Perfil;
@@ -67,27 +68,6 @@ public class SeguidoresService {
     }
 
 
-
-
-
-    public List<SeguidorDTO> obtenerAmigos() {
-        String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
-        Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);
-        Perfil perfil = perfilRepository.findById(usuario.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil no encontrado"));
-
-        List<SeguidorDTO> seguidores = perfil.getSeguidores().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR, perfil.getImagenUrlPerfil()))
-                .toList();
-
-        List<SeguidorDTO> seguidos = perfil.getSeguidos().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO, perfil.getImagenUrlPerfil()))
-                .toList();
-
-        return seguidores.stream()
-                .filter(seguidos::contains)
-                .collect(Collectors.toList());
-    }
 
     public void seguirUsuario(Integer idUsuarioASeguir) {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
@@ -169,5 +149,12 @@ public class SeguidoresService {
         return seguidores != null;
     }
 
+
+    public List<AmigoDTO> obtenerAmigos(Perfil perfilLogueado) {
+        return perfilLogueado.getSeguidos().stream()
+                .filter(seguidosRel -> seguidoresRepository.existsBySeguidorAndSeguido(seguidosRel.getSeguido(), perfilLogueado))
+                .map(seguidosRel -> new AmigoDTO(seguidosRel.getSeguido().getId(), seguidosRel.getSeguido().getNombre(), seguidosRel.getSeguido().getApellidos(), perfilLogueado.getImagenUrlPerfil()))
+                .collect(Collectors.toList());
+    }
 
 }
