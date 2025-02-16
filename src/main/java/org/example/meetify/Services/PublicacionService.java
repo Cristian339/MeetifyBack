@@ -40,7 +40,19 @@ public class PublicacionService {
 
     private final publicacionPerfilRepository publicacionPerfilRepository;
 
+    public List<PublicacionIdDTO> obtenerTodasLasPublicaciones(){
+        List<Publicacion> publicaciones = repository.findAll();
+        List<PublicacionIdDTO> publicacionesDTO = new ArrayList<>();
+        for (Publicacion p : publicaciones) {
+            Perfil perfil1 = perfilService.obtenerPerfilPorCorreo(p.getUsuarioCreador().getCorreoElectronico());
+            PublicacionIdDTO dto = new PublicacionIdDTO(p.getId(), p.getUsuarioCreador().getNombreUsuario(),
+                    p.getCategoria().getNombre(), p.getImagenUrlPub(),perfil1.getImagenUrlPerfil(), p.getTitulo(), p.getDescripcion(),
+                    p.getUbicacion(), p.getFechaIni(), p.getFechaFin());
 
+            publicacionesDTO.add(dto);
+        }
+        return publicacionesDTO;
+    }
 
     public List<PublicacionIdDTO> getAll() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();

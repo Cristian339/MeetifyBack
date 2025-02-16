@@ -4,11 +4,15 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 
+import org.example.meetify.DTO.PerfilDTO;
+import org.example.meetify.DTO.PerfilconIdDTO;
 import org.example.meetify.DTO.RegistroDTO;
 import org.example.meetify.Enum.Rol;
+import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.models.Usuario;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +25,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,6 +39,32 @@ public class UsuarioService implements UserDetailsService {
     private final PasswordEncoder codificadorContrasenia;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final PerfilRepository perfilRepository;
+
+
+    public List<PerfilconIdDTO> getAllPerfiles() {
+
+        List<Perfil> perfiles = perfilRepository.findAll();
+        List<PerfilconIdDTO> perfilDTOS = new ArrayList<>();
+
+        for (Perfil p : perfiles) {
+            Usuario usuario = obtenerUsuarioPorCorreo(p.getCorreoElectronico());
+            PerfilconIdDTO dto = new PerfilconIdDTO();
+            dto.setId(p.getId());
+            dto.setNombre(p.getNombre());
+            dto.setApellidos(p.getApellidos());
+            dto.setCorreoElectronico(p.getCorreoElectronico());
+            dto.setGenero(p.getGenero());
+            dto.setBiografia(p.getBiografia());
+            dto.setPais(p.getPais());
+            dto.setPuntajeTotal(p.getPuntajeTotal());
+            dto.setNombreUsuario(usuario.getNombreUsuario());
+            perfilDTOS.add(dto);
+        }
+
+        return perfilDTOS;
+    }
+
 
 
     public Usuario obtenerUsuarioPorNombre(String nombreUsuario) {

@@ -34,6 +34,12 @@ public class PublicacionController {
 
     private JWTService jwtService;
 
+
+    @GetMapping("/todas")
+    public List<PublicacionIdDTO> todasPublicaciones(@RequestHeader("Authorization") String token) {
+        return service.obtenerTodasLasPublicaciones();
+    }
+
     @GetMapping("/all")
     public List<PublicacionIdDTO> general(){
         return service.getAll();

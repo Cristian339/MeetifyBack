@@ -43,26 +43,6 @@ public class PerfilService {
     }
 
 
-    public List<PerfilDTO> getAll() {
-
-        List<Perfil> perfiles = perfilRepository.findAll();
-        List<PerfilDTO> perfilDTOS = new ArrayList<>();
-
-        for (Perfil p : perfiles) {
-            PerfilDTO dto = new PerfilDTO();
-            dto.setNombre(p.getNombre());
-            dto.setApellidos(p.getApellidos());
-            dto.setCorreoElectronico(p.getCorreoElectronico());
-            dto.setGenero(p.getGenero());
-            dto.setBiografia(p.getBiografia());
-            dto.setPais(p.getPais());
-            dto.setPuntajeTotal(p.getPuntajeTotal());
-
-            perfilDTOS.add(dto);
-        }
-
-        return perfilDTOS;
-    }
 
     public Perfil getById(Integer id) {
         return perfilRepository.findById(id).orElse(null);

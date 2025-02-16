@@ -30,6 +30,30 @@ public class PerfilController {
     private UsuarioService usuarioService;
     private UsuarioRepository usuarioRepository;
 
+
+
+    @GetMapping("/todos")
+    public List<PerfilconIdDTO> obtenerTodosLosPerfiles(@RequestHeader("Authorization") String token){
+        return usuarioService.getAllPerfiles();
+    }
+
+    @GetMapping("/otro-usuario/{id}")
+    public PerfilconIdDTO obtenerPerfilPorId(@PathVariable Integer id){
+        Perfil p = perfilRepository.findById(id).orElse(null);
+        Usuario usuario = usuarioService.obtenerUsuarioPorCorreo(p.getCorreoElectronico());
+        PerfilconIdDTO dto = new PerfilconIdDTO();
+        dto.setId(p.getId());
+        dto.setNombre(p.getNombre());
+        dto.setApellidos(p.getApellidos());
+        dto.setCorreoElectronico(p.getCorreoElectronico());
+        dto.setGenero(p.getGenero());
+        dto.setBiografia(p.getBiografia());
+        dto.setPais(p.getPais());
+        dto.setPuntajeTotal(p.getPuntajeTotal());
+        dto.setNombreUsuario(usuario.getNombreUsuario());
+        return dto;
+    }
+
     @GetMapping("/mi")
     public PerfilDTO obtenerMiPerfil(@RequestHeader("Authorization") String token) {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
