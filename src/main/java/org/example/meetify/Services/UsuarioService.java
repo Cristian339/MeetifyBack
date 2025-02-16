@@ -95,12 +95,16 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional
     public Usuario registrarUsuario(RegistroDTO dto) {
-        if (usuarioRepository.findTopByNombreUsuario(dto.getNombreUsuario()).isPresent()) {
-            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+        Optional<Usuario> usuarioExistente = usuarioRepository.findTopByCorreoElectronico(dto.getCorreoElectronico());
+        if (usuarioExistente.isPresent()) {
+            Usuario usuario = usuarioExistente.get();
+            if (!usuario.isCuentaVerificada()) {
+                throw new IllegalArgumentException("El correo electrónico no ha sido verificado");
+            }
         }
 
-        if (usuarioRepository.findTopByCorreoElectronico(dto.getCorreoElectronico()).isPresent()) {
-            throw new IllegalArgumentException("El correo electrónico ya está en uso");
+        if (usuarioRepository.findTopByNombreUsuario(dto.getNombreUsuario()).isPresent()) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
         }
 
         Usuario nuevoUsuario = new Usuario();
@@ -156,15 +160,6 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
-    /*public boolean verificarCorreo(String correoElectronico) {
-        Optional<Usuario> usuario = usuarioRepository.findTopByCorreoElectronico(correoElectronico);
-        if (usuario.isPresent()) {
-            Usuario usuarioVerificado = usuario.get();
-            usuarioRepository.save(usuarioVerificado);
-            return true;
-        }
-        return false;
-    }*/
 
     public boolean verificarCorreo(String correoElectronico) {
         Optional<Usuario> usuarioExistente = usuarioRepository.findTopByCorreoElectronico(correoElectronico);

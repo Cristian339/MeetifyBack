@@ -1,10 +1,15 @@
 package org.example.meetify.Controller;
 
 import lombok.AllArgsConstructor;
+import org.example.meetify.DTO.AmigoDTO;
 import org.example.meetify.DTO.SeguidorDTO;
 import org.example.meetify.Services.SeguidoresService;
+import org.example.meetify.models.Perfil;
+import org.example.meetify.models.Usuario;
+import org.example.meetify.seguridad.JWTService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -13,6 +18,7 @@ import java.util.List;
 public class SeguidorController {
 
     private final SeguidoresService seguidoresService;
+    private final JWTService jwtService;
 
     @GetMapping("/seguidores")
     @PreAuthorize("isAuthenticated()")
@@ -22,7 +28,7 @@ public class SeguidorController {
 
 
     @GetMapping("/comprobar/{id}")
-    public boolean comprobarSiSigues(@PathVariable Integer id){
+    public boolean comprobarSiSigues(@PathVariable Integer id) {
         return seguidoresService.seguirA(id);
     }
 
@@ -43,12 +49,6 @@ public class SeguidorController {
         return seguidoresService.obtenerSeguidosOtro(id);
     }
 
-    @GetMapping("/amigos")
-    @PreAuthorize("isAuthenticated()")
-    public List<SeguidorDTO> obtenerAmigos() {
-        return seguidoresService.obtenerAmigos();
-    }
-
     @PostMapping("/seguir/{idUsuarioASeguir}")
     @PreAuthorize("isAuthenticated()")
     public void seguirUsuario(@PathVariable Integer idUsuarioASeguir) {
@@ -60,4 +60,22 @@ public class SeguidorController {
     public void dejarDeSeguirUsuario(@PathVariable Integer idUsuarioADejarDeSeguir) {
         seguidoresService.dejarDeSeguirUsuario(idUsuarioADejarDeSeguir);
     }
+
+
+    @GetMapping("/amigos")
+    public List<AmigoDTO> obtenerAmigos(@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return seguidoresService.obtenerAmigos(perfilLogueado);
+    }
+
+
+
+
+
+    /*
+    *     @GetMapping("/mi-id")
+    public PerfilIDDTO obtenerMiPerfilId(@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return perfilService.getPerfilIDDTOById(perfilLogueado.getId());
+    }*/
 }
