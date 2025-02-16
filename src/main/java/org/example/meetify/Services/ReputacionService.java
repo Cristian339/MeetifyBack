@@ -8,6 +8,8 @@ import org.example.meetify.models.Perfil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ReputacionService {
@@ -38,5 +40,11 @@ public class ReputacionService {
         reputacion.setEstrellas(estrellas);
 
         return reputacionRepository.save(reputacion);
+    }
+
+
+    public List<Reputacion> obtenerReputacionesPorPublicacion(Integer publicacionId) {
+        Publicacion publicacion = publicacionService.encontrarPublicacionPorId(publicacionId);
+        return reputacionRepository.findByPublicacion(publicacion);
     }
 }

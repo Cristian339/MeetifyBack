@@ -5,6 +5,9 @@ import org.example.meetify.models.Publicacion;
 import org.example.meetify.models.Perfil;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ReputacionRepository extends JpaRepository<Reputacion, Integer> {
     boolean existsByPublicacionAndPerfil(Publicacion publicacion, Perfil perfil);
+    List<Reputacion> findByPublicacion(Publicacion publicacion);
 }

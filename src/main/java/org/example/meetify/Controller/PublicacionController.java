@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -152,7 +153,21 @@ public class PublicacionController {
         return  reputacionService.puntuarPublicacion(idPublicacion, perfilLogueado, estrellas);
     }
 
-
+    @GetMapping("/reputacion/{idPublicacion}")
+    public List<ReputacionDTO> listarReputaciones(@PathVariable Integer idPublicacion) {
+        List<Reputacion> repu = reputacionService.obtenerReputacionesPorPublicacion(idPublicacion);
+        List<ReputacionDTO> reputaciones = new ArrayList<>();
+        for(Reputacion r : repu) {
+            ReputacionDTO dto = new ReputacionDTO();
+            Usuario usuario = usuarioService.obtenerUsuarioPorCorreo(r.getPerfil().getCorreoElectronico());
+            dto.setNombreUsuario(usuario.getNombreUsuario());
+            dto.setImagenUrlUsuario(r.getPerfil().getImagenUrlPerfil());
+            dto.setEstrellas(r.getEstrellas());
+            dto.setMotivo(r.getMotivo());
+            reputaciones.add(dto);
+        }
+        return reputaciones;
+    }
 
 
 }
