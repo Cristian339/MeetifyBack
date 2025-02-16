@@ -34,7 +34,8 @@ public class PerfilController {
 
     @GetMapping("/todos")
     public List<PerfilconIdDTO> obtenerTodosLosPerfiles(@RequestHeader("Authorization") String token){
-        return usuarioService.getAllPerfiles();
+        Perfil perfil = jwtService.extraerPerfilToken(token);
+        return usuarioService.getAllPerfiles(perfil);
     }
 
     @GetMapping("/otro-usuario/{id}")

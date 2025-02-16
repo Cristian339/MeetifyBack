@@ -37,7 +37,7 @@ public class PublicacionController {
 
     @GetMapping("/todas")
     public List<PublicacionIdDTO> todasPublicaciones(@RequestHeader("Authorization") String token) {
-        return service.obtenerTodasLasPublicaciones();
+        return service.getAllsinMi();
     }
 
     @GetMapping("/all")
@@ -151,6 +151,8 @@ public class PublicacionController {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
         return  reputacionService.puntuarPublicacion(idPublicacion, perfilLogueado, estrellas);
     }
+
+
 
 
 }

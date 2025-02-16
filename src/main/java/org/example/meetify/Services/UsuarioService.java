@@ -42,24 +42,26 @@ public class UsuarioService implements UserDetailsService {
     private final PerfilRepository perfilRepository;
 
 
-    public List<PerfilconIdDTO> getAllPerfiles() {
+    public List<PerfilconIdDTO> getAllPerfiles(Perfil perfil) {
 
         List<Perfil> perfiles = perfilRepository.findAll();
         List<PerfilconIdDTO> perfilDTOS = new ArrayList<>();
 
         for (Perfil p : perfiles) {
-            Usuario usuario = obtenerUsuarioPorCorreo(p.getCorreoElectronico());
-            PerfilconIdDTO dto = new PerfilconIdDTO();
-            dto.setId(p.getId());
-            dto.setNombre(p.getNombre());
-            dto.setApellidos(p.getApellidos());
-            dto.setCorreoElectronico(p.getCorreoElectronico());
-            dto.setGenero(p.getGenero());
-            dto.setBiografia(p.getBiografia());
-            dto.setPais(p.getPais());
-            dto.setPuntajeTotal(p.getPuntajeTotal());
-            dto.setNombreUsuario(usuario.getNombreUsuario());
-            perfilDTOS.add(dto);
+            if(!p.equals(perfil)) {
+                Usuario usuario = obtenerUsuarioPorCorreo(p.getCorreoElectronico());
+                PerfilconIdDTO dto = new PerfilconIdDTO();
+                dto.setId(p.getId());
+                dto.setNombre(p.getNombre());
+                dto.setApellidos(p.getApellidos());
+                dto.setCorreoElectronico(p.getCorreoElectronico());
+                dto.setGenero(p.getGenero());
+                dto.setBiografia(p.getBiografia());
+                dto.setPais(p.getPais());
+                dto.setPuntajeTotal(p.getPuntajeTotal());
+                dto.setNombreUsuario(usuario.getNombreUsuario());
+                perfilDTOS.add(dto);
+            }
         }
 
         return perfilDTOS;
