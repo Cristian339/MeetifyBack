@@ -2,6 +2,7 @@ package org.example.meetify.Services;
 
 import lombok.RequiredArgsConstructor;
 import org.example.meetify.DTO.PublicacionDTO;
+import org.example.meetify.DTO.PublicacionIdDTO;
 import org.example.meetify.Repositories.CompartirRepository;
 import org.example.meetify.Repositories.PerfilRepository;
 import org.example.meetify.models.Compartir;
@@ -96,15 +97,16 @@ public class CompartirService {
 
 
 
-    public List<PublicacionDTO> publicacionesCompartidas() {
+    public List<PublicacionIdDTO> publicacionesCompartidas() {
         // Obtener las publicaciones compartidas por el perfil
         List<Publicacion> publicaciones = obtenerPublicacionesCompartidasPorPerfil();
 
         // Mapear cada Publicacion a PublicacionDTO
-        List<PublicacionDTO> publicacionesDTO = new ArrayList<>();
+        List<PublicacionIdDTO> publicacionesDTO = new ArrayList<>();
         for (Publicacion publicacion : publicaciones) {
-            PublicacionDTO dto = new PublicacionDTO(publicacion.getId(), publicacion.getUsuarioCreador().getNombreUsuario(),
-                    publicacion.getCategoria().getNombre(), publicacion.getImagenUrlPub(), publicacion.getImagenUrlPerfil(),
+            Perfil perfil = perfilService.obtenerPerfilPorCorreo(publicacion.getUsuarioCreador().getCorreoElectronico());
+            PublicacionIdDTO dto = new PublicacionIdDTO(publicacion.getId(), publicacion.getUsuarioCreador().getNombreUsuario(),
+                    publicacion.getCategoria().getNombre(), publicacion.getImagenUrlPub(),perfil.getImagenUrlPerfil() ,
                     publicacion.getTitulo(), publicacion.getDescripcion(), publicacion.getUbicacion(),
                     publicacion.getFechaIni(), publicacion.getFechaFin());
 

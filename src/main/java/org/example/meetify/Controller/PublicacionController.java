@@ -137,6 +137,26 @@ public class PublicacionController {
     }
 
 
+    @GetMapping("/dentro/lista")
+    public List<PublicacionIdDTO> listasDeEventosDentro(@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        List<Publicacion> publicaciones = repository.findAll();
+        List<PublicacionIdDTO> publicacionIdDTOs = new ArrayList<>();
+        for (Publicacion publicacion : publicaciones) {
+            if(service.estaEnPublicacion(publicacion.getId(),perfilLogueado)){
+                Perfil perfil = perfilService.obtenerPerfilPorCorreo(publicacion.getUsuarioCreador().getCorreoElectronico());
+                PublicacionIdDTO dto = new PublicacionIdDTO(publicacion.getId(), publicacion.getUsuarioCreador().getNombreUsuario(),
+                        publicacion.getCategoria().getNombre(), publicacion.getImagenUrlPub(),perfil.getImagenUrlPerfil() ,
+                        publicacion.getTitulo(), publicacion.getDescripcion(), publicacion.getUbicacion(),
+                        publicacion.getFechaIni(), publicacion.getFechaFin());
+                publicacionIdDTOs.add(dto);
+            }
+        }
+
+        return publicacionIdDTOs;
+    }
+
+
     @GetMapping("/otro-usuario/{id}")
     public PerfilDTO obtenerPerfilAjeno(@PathVariable Integer id) {
         Perfil perfil = service.obtenerPerfilPorPublicacion(id);

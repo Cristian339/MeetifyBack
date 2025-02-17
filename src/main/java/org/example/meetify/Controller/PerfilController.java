@@ -87,7 +87,7 @@ public class PerfilController {
     }
 
     @GetMapping("/compartidos")
-    public List<PublicacionDTO> obtenerPublicacionesCompartidas() {
+    public List<PublicacionIdDTO> obtenerPublicacionesCompartidas() {
         return compartirService.publicacionesCompartidas();
     }
 

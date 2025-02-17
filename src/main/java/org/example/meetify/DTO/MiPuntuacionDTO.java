@@ -3,6 +3,7 @@ package org.example.meetify.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.meetify.models.Categoria;
 
 import java.time.LocalDate;
 
@@ -16,6 +17,6 @@ public class MiPuntuacionDTO {
     private String imagenUrlPerfil;
     private int estrellas;
     private String titulo;
-    private String categoria;
+    private Categoria categoria;
 
 }

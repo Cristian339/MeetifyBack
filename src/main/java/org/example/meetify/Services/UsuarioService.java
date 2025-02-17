@@ -55,6 +55,7 @@ public class UsuarioService implements UserDetailsService {
                 dto.setNombre(p.getNombre());
                 dto.setApellidos(p.getApellidos());
                 dto.setCorreoElectronico(p.getCorreoElectronico());
+                dto.setImagenUrlPerfil(p.getImagenUrlPerfil());
                 dto.setGenero(p.getGenero());
                 dto.setBiografia(p.getBiografia());
                 dto.setPais(p.getPais());

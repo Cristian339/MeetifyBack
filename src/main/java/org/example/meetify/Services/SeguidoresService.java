@@ -32,7 +32,7 @@ public class SeguidoresService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nadie te sigue"));
 
         return perfil.getSeguidores().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR, seguidoresRel.getSeguido().getImagenUrlPerfil()))
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR, seguidoresRel.getSeguidor().getImagenUrlPerfil()))
                 .collect(Collectors.toList());
     }
 
