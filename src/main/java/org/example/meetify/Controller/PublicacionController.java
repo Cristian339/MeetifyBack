@@ -192,7 +192,11 @@ public class PublicacionController {
         return reputaciones;
     }
 
-
+    @GetMapping("/reputacion/mi-reputacion")
+    public List<MiPuntuacionDTO> miReputacion(@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return reputacionService.miReputacion(perfilLogueado);
+    }
 
 
 

@@ -12,4 +12,5 @@ public interface publicacionPerfilRepository extends JpaRepository<PublicacionPe
     List<PublicacionPerfil> findByPublicacion(Publicacion publicacion);
     Optional<PublicacionPerfil> findByPerfilAndPublicacion(Perfil perfil, Publicacion publicacion);
 
+
 }

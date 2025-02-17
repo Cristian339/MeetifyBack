@@ -415,4 +415,8 @@ public class PublicacionService {
 
     }
 
+    public List<Publicacion> getAllByPerfil(Usuario usuario) {
+        return publicacionRepository.findByUsuarioCreador(usuario);
+    }
+
 }

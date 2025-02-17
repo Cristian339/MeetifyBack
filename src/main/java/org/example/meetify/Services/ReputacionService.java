@@ -1,14 +1,17 @@
 package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
+import org.example.meetify.DTO.MiPuntuacionDTO;
 import org.example.meetify.Repositories.ReputacionRepository;
 import org.example.meetify.models.Reputacion;
 import org.example.meetify.models.Publicacion;
 import org.example.meetify.models.Perfil;
+import org.example.meetify.models.Usuario;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -46,6 +49,28 @@ public class ReputacionService {
     public List<Reputacion> obtenerReputacionesPorPublicacion(Integer publicacionId) {
         Publicacion publicacion = publicacionService.encontrarPublicacionPorId(publicacionId);
         return reputacionRepository.findByPublicacion(publicacion);
+    }
+
+    public List<MiPuntuacionDTO> miReputacion(Perfil perfil) {
+        Usuario usuario = perfil.getUsuario();
+        List<Publicacion> publicaciones = publicacionService.getAllByPerfil(usuario);
+
+        return publicaciones.stream().map(publicacion -> {
+            List<Reputacion> reputaciones = reputacionRepository.findByPublicacion(publicacion);
+            int mediaEstrellas = reputaciones.stream()
+                    .mapToInt(Reputacion::getEstrellas)
+                    .average()
+                    .orElse(0.0) > 0.5 ? 1 : 4;
+
+            return new MiPuntuacionDTO(
+                    perfil.getNombre(),
+                    publicacion.getImagenUrlPub(),
+                    perfil.getImagenUrlPerfil(),
+                    (int) (mediaEstrellas * 5),
+                    publicacion.getTitulo(),
+                    publicacion.getCategoria()
+            );
+        }).collect(Collectors.toList());
     }
 
 
