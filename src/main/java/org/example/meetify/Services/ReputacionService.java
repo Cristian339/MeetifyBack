@@ -19,7 +19,7 @@ public class ReputacionService {
     private final PerfilService perfilService;
 
     @Transactional
-    public Reputacion puntuarPublicacion(Integer publicacionId, Perfil perfil, Integer estrellas) {
+    public Reputacion puntuarPublicacion(Integer publicacionId, Perfil perfil, Integer estrellas, String motivo) {
         if (estrellas < 1 || estrellas > 5) {
             throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5 estrellas");
         }
@@ -38,10 +38,10 @@ public class ReputacionService {
         reputacion.setPublicacion(publicacion);
         reputacion.setPerfil(perfil);
         reputacion.setEstrellas(estrellas);
+        reputacion.setMotivo(motivo != null ? motivo : "");
 
         return reputacionRepository.save(reputacion);
     }
-
 
     public List<Reputacion> obtenerReputacionesPorPublicacion(Integer publicacionId) {
         Publicacion publicacion = publicacionService.encontrarPublicacionPorId(publicacionId);

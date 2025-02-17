@@ -148,9 +148,12 @@ public class PublicacionController {
 
 
     @PostMapping("/{idPublicacion}/puntuar")
-    public Reputacion puntuarPublicacion(@PathVariable Integer idPublicacion, @RequestParam Integer estrellas, @RequestHeader("Authorization") String token) {
+    public Reputacion puntuarPublicacion(@PathVariable Integer idPublicacion, @RequestBody ReputacionDTO reputacionDTO, @RequestHeader("Authorization") String token) {
+        if (reputacionDTO.getMotivo() != null && reputacionDTO.getMotivo().length() > 255) {
+            throw new IllegalArgumentException("El motivo no puede exceder los 255 caracteres");
+        }
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
-        return  reputacionService.puntuarPublicacion(idPublicacion, perfilLogueado, estrellas);
+        return reputacionService.puntuarPublicacion(idPublicacion, perfilLogueado, reputacionDTO.getEstrellas(), reputacionDTO.getMotivo());
     }
 
     @GetMapping("/reputacion/{idPublicacion}")
