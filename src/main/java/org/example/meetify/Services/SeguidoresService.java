@@ -32,7 +32,7 @@ public class SeguidoresService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nadie te sigue"));
 
         return perfil.getSeguidores().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR, perfil.getImagenUrlPerfil()))
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR, seguidoresRel.getSeguido().getImagenUrlPerfil()))
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +42,7 @@ public class SeguidoresService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nadie te sigue"));
 
         return perfil.getSeguidores().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR,perfil.getImagenUrlPerfil()))
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguidor().getId(), seguidoresRel.getSeguidor().getNombre(), Estado.SEGUIDOR,seguidoresRel.getSeguido().getImagenUrlPerfil()))
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +53,7 @@ public class SeguidoresService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No sigues a nadie"));
 
         return perfil.getSeguidos().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO, perfil.getImagenUrlPerfil()))
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO, seguidoresRel.getSeguido().getImagenUrlPerfil()))
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +63,7 @@ public class SeguidoresService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No sigues a nadie"));
 
         return perfil.getSeguidos().stream()
-                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO,perfil.getImagenUrlPerfil()))
+                .map(seguidoresRel -> new SeguidorDTO(seguidoresRel.getSeguido().getId(), seguidoresRel.getSeguido().getNombre(), Estado.SEGUIDO,seguidoresRel.getSeguido().getImagenUrlPerfil()))
                 .collect(Collectors.toList());
     }
 
@@ -153,7 +153,7 @@ public class SeguidoresService {
     public List<AmigoDTO> obtenerAmigos(Perfil perfilLogueado) {
         return perfilLogueado.getSeguidos().stream()
                 .filter(seguidosRel -> seguidoresRepository.existsBySeguidorAndSeguido(seguidosRel.getSeguido(), perfilLogueado))
-                .map(seguidosRel -> new AmigoDTO(seguidosRel.getSeguido().getId(), seguidosRel.getSeguido().getNombre(), seguidosRel.getSeguido().getApellidos(), perfilLogueado.getImagenUrlPerfil()))
+                .map(seguidosRel -> new AmigoDTO(seguidosRel.getSeguido().getId(), seguidosRel.getSeguido().getNombre(), seguidosRel.getSeguido().getApellidos(), seguidosRel.getSeguido().getImagenUrlPerfil()))
                 .collect(Collectors.toList());
     }
 

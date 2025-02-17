@@ -47,4 +47,6 @@ public class ReputacionService {
         Publicacion publicacion = publicacionService.encontrarPublicacionPorId(publicacionId);
         return reputacionRepository.findByPublicacion(publicacion);
     }
+
+
 }
