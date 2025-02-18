@@ -2,6 +2,8 @@ package org.example.meetify.Services;
 
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.ActualizarBiografiaDTO;
 import org.example.meetify.DTO.CategoriaDTO;
@@ -19,13 +21,11 @@ import org.example.meetify.seguridad.JWTService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -117,6 +117,10 @@ public class PerfilService {
         List<PerfilDTO> baneados = new ArrayList<>();
         List<Perfil> todos = perfilRepository.findAll();
 
+        if (todos.isEmpty()) {
+            throw new IllegalStateException("No hay perfiles disponibles");
+        }
+
         for (Perfil p : todos) {
             if (p.getBaneado() && p.getUsuario().getRol() == Rol.PERFIL) {
                 PerfilDTO dto = new PerfilDTO();
@@ -127,31 +131,71 @@ public class PerfilService {
                 baneados.add(dto);
             }
         }
+
+        if (baneados.isEmpty()) {
+            throw new IllegalStateException("No hay perfiles baneados");
+        }
+
         return baneados;
     }
 
     public List<PerfilDTO> listaDeNoBaneados() {
-        List<PerfilDTO> baneados = new ArrayList<>();
+        List<PerfilDTO> noBaneados = new ArrayList<>();
         List<Perfil> todos = perfilRepository.findAll();
+
+        if (todos.isEmpty()) {
+            throw new IllegalStateException("No hay perfiles disponibles");
+        }
 
         for (Perfil p : todos) {
             if (!p.getBaneado() && p.getUsuario().getRol() == Rol.PERFIL) {
                 PerfilDTO dto = perfilMapper.toDTO(p);
-                baneados.add(dto);
+                noBaneados.add(dto);
             }
         }
-        return baneados;
-    }
 
-    public void ban(String correo) {
-        Perfil perfil = obtenerPerfilPorCorreo(correo);
-
-        if (perfil.getBaneado()) {
-            perfil.setBaneado(false);
-        } else {
-            perfil.setBaneado(true);
+        if (noBaneados.isEmpty()) {
+            throw new IllegalStateException("Todos los perfiles están baneados");
         }
 
+        return noBaneados;
+    }
+
+    public void ban(@Email @NotNull String correo) {
+        if (!StringUtils.hasText(correo)) {
+            throw new IllegalArgumentException("El correo no puede estar vacío");
+        }
+
+        Perfil perfil = obtenerPerfilPorCorreo(correo);
+
+        if (Objects.isNull(perfil)) {
+            throw new IllegalArgumentException("Perfil no encontrado con el correo: " + correo);
+        }
+
+        if (perfil.getBaneado()) {
+            throw new IllegalStateException("El perfil ya está baneado");
+        }
+
+        perfil.setBaneado(true);
+        perfilRepository.save(perfil);
+    }
+
+    public void desbanear(@Email @NotNull String correo) {
+        if (!StringUtils.hasText(correo)) {
+            throw new IllegalArgumentException("El correo no puede estar vacío");
+        }
+
+        Perfil perfil = obtenerPerfilPorCorreo(correo);
+
+        if (Objects.isNull(perfil)) {
+            throw new IllegalArgumentException("Perfil no encontrado con el correo: " + correo);
+        }
+
+        if (!perfil.getBaneado()) {
+            throw new IllegalStateException("El perfil no está baneado");
+        }
+
+        perfil.setBaneado(false);
         perfilRepository.save(perfil);
     }
 
