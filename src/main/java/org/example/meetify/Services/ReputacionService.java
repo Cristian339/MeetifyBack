@@ -2,6 +2,7 @@ package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.MiPuntuacionDTO;
+import org.example.meetify.DTO.PuntuacionTotalDTO;
 import org.example.meetify.Repositories.ReputacionRepository;
 import org.example.meetify.models.Reputacion;
 import org.example.meetify.models.Publicacion;
@@ -71,6 +72,18 @@ public class ReputacionService {
                     publicacion.getCategoria()
             );
         }).collect(Collectors.toList());
+    }
+
+    public PuntuacionTotalDTO obtenerPuntuacionTotal(Perfil perfil) {
+        List<Reputacion> reputaciones = reputacionRepository.findByPerfil(perfil);
+
+        int puntuacionTotal = reputaciones.stream()
+                .mapToInt(Reputacion::getEstrellas)
+                .sum() * 5;
+
+        PuntuacionTotalDTO puntuacionTotalDTO = new PuntuacionTotalDTO();
+        puntuacionTotalDTO.setPuntuacionTotal(puntuacionTotal);
+        return puntuacionTotalDTO;
     }
 
 

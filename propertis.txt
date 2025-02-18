@@ -2,9 +2,9 @@ spring.application.name=meetify
 
 spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
-spring.datasource.username=postgres
-spring.datasource.password=usuario
+spring.datasource.url=jdbc:postgresql://dpg-cuq6oartq21c73a2nivg-a.frankfurt-postgres.render.com/meetify
+spring.datasource.username=meetify_user
+spring.datasource.password=gySQ8vXfTGJPWWxNDSpsWj5xE3gW9Saq
 
 spring.jpa.hibernate.ddl-auto=update
 
