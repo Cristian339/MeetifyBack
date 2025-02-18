@@ -50,6 +50,10 @@ public class AdminController {
         perfilService.ban(correo);
     }
 
+    @PostMapping("/desbanear/{correo}")
+    public void desbaneo(@PathVariable String correo) {
+        perfilService.desbanear(correo);
+    }
 
     @GetMapping("/publicaciones/{correo}")
     public List<PublicacionIdDTO> publicacionesPerfil(@PathVariable String correo){
