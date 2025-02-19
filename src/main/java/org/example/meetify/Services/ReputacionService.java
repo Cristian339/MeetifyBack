@@ -54,6 +54,11 @@ public class ReputacionService {
         return reputacionRepository.findByPublicacion(publicacion);
     }
 
+    public void eliminarReputacionPublicacion(Publicacion publicacion){
+        List<Reputacion> reputacions = obtenerReputacionesPorPublicacion(publicacion.getId());
+        reputacionRepository.deleteAll(reputacions);
+    }
+
     public List<MiPuntuacionDTO> miReputacion(Perfil perfil) {
         Usuario usuario = perfil.getUsuario();
         List<Publicacion> publicaciones = publicacionService.getAllByPerfil(usuario);

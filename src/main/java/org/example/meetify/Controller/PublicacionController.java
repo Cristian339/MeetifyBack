@@ -36,6 +36,7 @@ public class PublicacionController {
 
     private JWTService jwtService;
 
+    private CompartirService compartirService;
 
     @GetMapping("/todas")
     public List<PublicacionIdDTO> todasPublicaciones(@RequestHeader("Authorization") String token) {
@@ -71,7 +72,11 @@ public class PublicacionController {
 
     @PostMapping("del/{idPub}")
     public void eliminarPublicacion2(@PathVariable Integer idPub) {
-        repository.deleteById(idPub);
+        Publicacion publicacion = repository.findById(idPub).orElse(null);
+        compartirService.eliminarCompartidoPorPublicacion(publicacion);
+        service.eliminarTodosLosUsuariosUnidos(publicacion);
+        reputacionService.eliminarReputacionPublicacion(publicacion);
+        repository.delete(publicacion);
     }
 
     @DeleteMapping("/{idPub}")
