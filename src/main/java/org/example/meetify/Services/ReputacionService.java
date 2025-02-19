@@ -77,9 +77,11 @@ public class ReputacionService {
     }
 
     public PuntuacionTotalDTO obtenerPuntuacionTotal(Perfil perfil) {
-        List<Reputacion> reputaciones = reputacionRepository.findByPerfil(perfil);
+        Usuario usuario = perfil.getUsuario();
+        List<Publicacion> publicaciones = publicacionService.getAllByPerfil(usuario);
 
-        int puntuacionTotal = reputaciones.stream()
+        int puntuacionTotal = publicaciones.stream()
+                .flatMap(publicacion -> reputacionRepository.findByPublicacion(publicacion).stream())
                 .mapToInt(Reputacion::getEstrellas)
                 .sum() * 5;
 
