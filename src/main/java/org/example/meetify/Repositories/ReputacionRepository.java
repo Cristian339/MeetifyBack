@@ -10,4 +10,6 @@ import java.util.List;
 public interface ReputacionRepository extends JpaRepository<Reputacion, Integer> {
     boolean existsByPublicacionAndPerfil(Publicacion publicacion, Perfil perfil);
     List<Reputacion> findByPublicacion(Publicacion publicacion);
+    List<Reputacion> findByPerfil(Perfil perfil);
+
 }

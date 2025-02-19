@@ -2,6 +2,8 @@ package org.example.meetify.Services;
 
 import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.MiPuntuacionDTO;
+import org.example.meetify.DTO.PuntuacionTotalDTO;
+import org.example.meetify.DTO.ReseniasMiasDTO;
 import org.example.meetify.Repositories.ReputacionRepository;
 import org.example.meetify.models.Reputacion;
 import org.example.meetify.models.Publicacion;
@@ -10,6 +12,7 @@ import org.example.meetify.models.Usuario;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +54,11 @@ public class ReputacionService {
         return reputacionRepository.findByPublicacion(publicacion);
     }
 
+    public void eliminarReputacionPublicacion(Publicacion publicacion){
+        List<Reputacion> reputacions = obtenerReputacionesPorPublicacion(publicacion.getId());
+        reputacionRepository.deleteAll(reputacions);
+    }
+
     public List<MiPuntuacionDTO> miReputacion(Perfil perfil) {
         Usuario usuario = perfil.getUsuario();
         List<Publicacion> publicaciones = publicacionService.getAllByPerfil(usuario);
@@ -71,6 +79,33 @@ public class ReputacionService {
                     publicacion.getCategoria()
             );
         }).collect(Collectors.toList());
+    }
+
+    public PuntuacionTotalDTO obtenerPuntuacionTotal(Perfil perfil) {
+        Usuario usuario = perfil.getUsuario();
+        List<Publicacion> publicaciones = publicacionService.getAllByPerfil(usuario);
+
+        int puntuacionTotal = publicaciones.stream()
+                .flatMap(publicacion -> reputacionRepository.findByPublicacion(publicacion).stream())
+                .mapToInt(Reputacion::getEstrellas)
+                .sum() * 5;
+
+        PuntuacionTotalDTO puntuacionTotalDTO = new PuntuacionTotalDTO();
+        puntuacionTotalDTO.setPuntuacionTotal(puntuacionTotal);
+        return puntuacionTotalDTO;
+    }
+
+    public List<ReseniasMiasDTO> obtenerMisResenias(Perfil perfil) {
+        List<Reputacion> reputaciones = reputacionRepository.findByPerfil(perfil);
+        Usuario usuario = perfil.getUsuario();
+        List<ReseniasMiasDTO> reseniasMiasDTOS = new ArrayList<>();
+        for(Reputacion reputacion : reputaciones) {
+            Publicacion publicacion = reputacion.getPublicacion();
+            ReseniasMiasDTO r = new ReseniasMiasDTO(publicacion.getImagenUrlPub(),publicacion.getTitulo(),
+                    usuario.getNombreUsuario(),perfil.getImagenUrlPerfil(),reputacion.getEstrellas(),reputacion.getMotivo());
+            reseniasMiasDTOS.add(r);
+        }
+        return reseniasMiasDTOS;
     }
 
 

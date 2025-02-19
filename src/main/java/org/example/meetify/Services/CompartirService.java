@@ -127,4 +127,14 @@ public class CompartirService {
         }
     }
 
+
+    public void eliminarCompartidoPorPublicacion(Publicacion publicacion){
+        List<Compartir> compartirs = compartirRepository.findAll();
+        for (Compartir compartir : compartirs){
+            if(compartir.getPublicacion().equals(publicacion)){
+                compartirRepository.delete(compartir);
+            }
+        }
+    }
+
 }

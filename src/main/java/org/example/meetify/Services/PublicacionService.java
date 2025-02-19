@@ -303,6 +303,14 @@ public class PublicacionService {
         return usuarios;
     }
 
+
+
+
+    public void eliminarTodosLosUsuariosUnidos(Publicacion publicacion){
+        List<PublicacionPerfil> pps = publicacionPerfilRepository.findByPublicacion(publicacion);
+        publicacionPerfilRepository.deleteAll(pps);
+    }
+
     public PublicacionDTO obtenerPublicacionPorId(Integer id) {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
         Usuario usuario = usuarioService.obtenerUsuarioPorNombre(correoAutenticado);

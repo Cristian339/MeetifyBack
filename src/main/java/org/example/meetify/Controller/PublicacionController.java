@@ -13,6 +13,7 @@ import org.example.meetify.seguridad.JWTService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class PublicacionController {
 
     private JWTService jwtService;
 
+    private CompartirService compartirService;
 
     @GetMapping("/todas")
     public List<PublicacionIdDTO> todasPublicaciones(@RequestHeader("Authorization") String token) {
@@ -70,7 +72,11 @@ public class PublicacionController {
 
     @PostMapping("del/{idPub}")
     public void eliminarPublicacion2(@PathVariable Integer idPub) {
-        repository.deleteById(idPub);
+        Publicacion publicacion = repository.findById(idPub).orElse(null);
+        compartirService.eliminarCompartidoPorPublicacion(publicacion);
+        service.eliminarTodosLosUsuariosUnidos(publicacion);
+        reputacionService.eliminarReputacionPublicacion(publicacion);
+        repository.delete(publicacion);
     }
 
     @DeleteMapping("/{idPub}")
@@ -198,7 +204,23 @@ public class PublicacionController {
         return reputacionService.miReputacion(perfilLogueado);
     }
 
+    @GetMapping("/puntuacion-total")
+    public PuntuacionTotalDTO obtenerPuntuacionTotal(@RequestHeader("Authorization") String token) {
+        Perfil perfil = jwtService.extraerPerfilToken(token);
+        return reputacionService.obtenerPuntuacionTotal(perfil);
+    }
 
+    @GetMapping("/puntuacion-total/{perfilId}")
+    public PuntuacionTotalDTO obtenerPuntuacionTotal(@PathVariable Integer perfilId) {
+        Perfil perfil = perfilService.obtenerPerfilPorId(perfilId);
+        return reputacionService.obtenerPuntuacionTotal(perfil);
+    }
+
+    @GetMapping("/mis-resenias")
+    public List<ReseniasMiasDTO> misResenias(@RequestHeader("Authorization") String token) {
+        Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
+        return reputacionService.obtenerMisResenias(perfilLogueado);
+    }
 
 
 }
