@@ -205,6 +205,12 @@ public class PublicacionController {
         return reputacionService.obtenerPuntuacionTotal(perfil);
     }
 
+    @GetMapping("/puntuacion-total/{perfilId}")
+    public PuntuacionTotalDTO obtenerPuntuacionTotal(@PathVariable Integer perfilId) {
+        Perfil perfil = perfilService.obtenerPerfilPorId(perfilId);
+        return reputacionService.obtenerPuntuacionTotal(perfil);
+    }
+
     @GetMapping("/mis-resenias")
     public List<ReseniasMiasDTO> misResenias(@RequestHeader("Authorization") String token) {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);

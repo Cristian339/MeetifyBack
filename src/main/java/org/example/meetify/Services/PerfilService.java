@@ -229,5 +229,9 @@ public class PerfilService {
         }
         return new PerfilIDDTO(perfil.getId());
     }
+
+    public Perfil obtenerPerfilPorId(Integer id) {
+        return perfilRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Perfil not found with id: " + id));
+    }
 }
 
