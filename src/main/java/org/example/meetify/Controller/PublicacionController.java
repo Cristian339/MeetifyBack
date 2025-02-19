@@ -127,8 +127,8 @@ public class PublicacionController {
     public boolean obtenerCreadorPublicacion(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
         Usuario usuario = usuarioService.obtenerUsuarioPorCorreo(perfilLogueado.getCorreoElectronico());
-
-        if(usuario.getId() == id) {
+        Publicacion publicacion = repository.findById(id).orElse(null);
+        if(usuario.getNombreUsuario() == publicacion.getUsuarioCreador().getNombreUsuario()) {
             return true;
         }else {
             return false;
