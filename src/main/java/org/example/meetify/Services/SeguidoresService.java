@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.meetify.DTO.AmigoDTO;
 import org.example.meetify.DTO.SeguidorDTO;
 import org.example.meetify.Repositories.SeguidoresRepository;
+import org.example.meetify.Repositories.UsuarioRepository;
 import org.example.meetify.models.Perfil;
 import org.example.meetify.Enum.Estado;
 import org.example.meetify.models.Seguidores;
@@ -24,6 +25,8 @@ public class SeguidoresService {
     private final SeguidoresRepository seguidoresRepository;
     private final JWTFilter jwtFilter;
     private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
+    private PerfilService perfilService;
 
     public List<SeguidorDTO> obtenerSeguidores() {
         String correoAutenticado = jwtFilter.obtenerCorreoAutenticado();
