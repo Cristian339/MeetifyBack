@@ -127,8 +127,8 @@ public class PublicacionController {
     public boolean obtenerCreadorPublicacion(@PathVariable Integer id,@RequestHeader("Authorization") String token) {
         Perfil perfilLogueado = jwtService.extraerPerfilToken(token);
         Usuario usuario = usuarioService.obtenerUsuarioPorCorreo(perfilLogueado.getCorreoElectronico());
-
-        if(usuario.getId() == id) {
+        Publicacion publicacion = repository.findById(id).orElse(null);
+        if(usuario.getNombreUsuario() == publicacion.getUsuarioCreador().getNombreUsuario()) {
             return true;
         }else {
             return false;
@@ -164,10 +164,10 @@ public class PublicacionController {
 
 
     @GetMapping("/otro-usuario/{id}")
-    public PerfilDTO obtenerPerfilAjeno(@PathVariable Integer id) {
+    public PerfilconIdDTO obtenerPerfilAjeno(@PathVariable Integer id) {
         Perfil perfil = service.obtenerPerfilPorPublicacion(id);
 
-        return new PerfilDTO(perfil.getNombre(), perfil.getApellidos(), perfil.getCorreoElectronico(),
+        return new PerfilconIdDTO(perfil.getId(),perfil.getNombre(), perfil.getApellidos(), perfil.getCorreoElectronico(),
                 perfil.getUsuario().getNombreUsuario(), perfil.getPuntajeTotal(), perfil.getGenero(),
                 perfil.getBiografia(), perfil.getPais(), perfil.getFechaNacimiento(), perfil.getImagenUrlPerfil());
     }
