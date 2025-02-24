@@ -10,4 +10,5 @@ public class MeetifyApplication {
         SpringApplication.run(MeetifyApplication.class, args);
     }
 
+
 }
