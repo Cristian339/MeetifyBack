@@ -38,7 +38,7 @@ public class SecurityConfig {
                 /*.cors(AbstractHttpConfigurer::disable)*/
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOriginPatterns(List.of("https://cvargasluizagaatsafareyes-es.onrender.com/",
+                    config.setAllowedOriginPatterns(List.of("https://meetifyfront-d8rz.onrender.com",
                             "http://localhost", "capacitor://localhost", "http://localhost:4200"));
                     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(Arrays.asList("Authorization","Content-Type"));
